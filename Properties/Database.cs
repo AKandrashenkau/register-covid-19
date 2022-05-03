@@ -31,11 +31,11 @@ namespace REGOVID.Properties.Struct.Database.Tab
         private readonly string homeAddr;
         private readonly string company;
         private readonly string occupation;
-        public static readonly char[] tagSlf = new char[3] { (char)0x0424, (char)0x0418, (char)0x041E };
-        public static readonly char[] tagBirthYear = new char[13] { (char)0x0414, (char)0x0430, (char)0x0442, (char)0x0430, (char)0x0020, (char)0x0440, (char)0x043E, (char)0x0436, (char)0x0434, (char)0x0435, (char)0x043D, (char)0x0438, (char)0x044F };
-        public static readonly char[] tagHomeAddr = new char[16] { (char)0x0410, (char)0x0434, (char)0x0440, (char)0x0435, (char)0x0441, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x043E, (char)0x0436, (char)0x0438, (char)0x0432, (char)0x0430, (char)0x043D, (char)0x0438, (char)0x044F };
-        public static readonly char[] tagCompany = new char[12] { (char)0x041C, (char)0x0435, (char)0x0441, (char)0x0442, (char)0x043E, (char)0x0020, (char)0x0440, (char)0x0430, (char)0x0431, (char)0x043E, (char)0x0442, (char)0x044B };
-        public static readonly char[] tagOccupation = new char[20] { (char)0x0417, (char)0x0430, (char)0x043D, (char)0x0438, (char)0x043C, (char)0x0430, (char)0x0435, (char)0x043C, (char)0x0430, (char)0x044F, (char)0x0020, (char)0x0434, (char)0x043E, (char)0x043B, (char)0x0436, (char)0x043D, (char)0x043E, (char)0x0441, (char)0x0442, (char)0x044C };
+        public static readonly char[] tagSlf = new char[0x03] { (char)0x0424, (char)0x0418, (char)0x041E };
+        public static readonly char[] tagBirthYear = new char[0x0D] { (char)0x0414, (char)0x0430, (char)0x0442, (char)0x0430, (char)0x0020, (char)0x0440, (char)0x043E, (char)0x0436, (char)0x0434, (char)0x0435, (char)0x043D, (char)0x0438, (char)0x044F };
+        public static readonly char[] tagHomeAddr = new char[0x10] { (char)0x0410, (char)0x0434, (char)0x0440, (char)0x0435, (char)0x0441, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x043E, (char)0x0436, (char)0x0438, (char)0x0432, (char)0x0430, (char)0x043D, (char)0x0438, (char)0x044F };
+        public static readonly char[] tagCompany = new char[0x0C] { (char)0x041C, (char)0x0435, (char)0x0441, (char)0x0442, (char)0x043E, (char)0x0020, (char)0x0440, (char)0x0430, (char)0x0431, (char)0x043E, (char)0x0442, (char)0x044B };
+        public static readonly char[] tagOccupation = new char[0x14] { (char)0x0417, (char)0x0430, (char)0x043D, (char)0x0438, (char)0x043C, (char)0x0430, (char)0x0435, (char)0x043C, (char)0x0430, (char)0x044F, (char)0x0020, (char)0x0434, (char)0x043E, (char)0x043B, (char)0x0436, (char)0x043D, (char)0x043E, (char)0x0441, (char)0x0442, (char)0x044C };
         public object this[in Field field, in Action act]
         {
             get
@@ -100,11 +100,11 @@ namespace REGOVID.Properties.Struct.Database.Tab
         private readonly string numbAppoint;
         private readonly string dateActual;
         private readonly string datePlan;
-        public static readonly char[] tagName = new char[22] { (char)0x041D, (char)0x0430, (char)0x0438, (char)0x043C, (char)0x0435, (char)0x043D, (char)0x043E, (char)0x0432, (char)0x0430, (char)0x043D, (char)0x0438, (char)0x0435, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x0435, (char)0x043F, (char)0x0430, (char)0x0440, (char)0x0430, (char)0x0442, (char)0x0430 };
-        public static readonly char[] tagSerial = new char[15] { (char)0x0421, (char)0x0435, (char)0x0440, (char)0x0438, (char)0x044F, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x0435, (char)0x043F, (char)0x0430, (char)0x0440, (char)0x0430, (char)0x0442, (char)0x0430 };
-        public static readonly char[] tagNumbAppoint = new char[17] { (char)0x041A, (char)0x043E, (char)0x043B, (char)0x0438, (char)0x0447, (char)0x0435, (char)0x0441, (char)0x0442, (char)0x0432, (char)0x043E, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x0438, (char)0x0451, (char)0x043C, (char)0x0430 };
-        public static readonly char[] tagDateActual = new char[16] { (char)0x0424, (char)0x0430, (char)0x043A, (char)0x0442, (char)0x0438, (char)0x0447, (char)0x0435, (char)0x0441, (char)0x043A, (char)0x0430, (char)0x044F, (char)0x0020, (char)0x0434, (char)0x0430, (char)0x0442, (char)0x0430 };
-        public static readonly char[] tagDatePlan = new char[13] { (char)0x041F, (char)0x043B, (char)0x0430, (char)0x043D, (char)0x043E, (char)0x0432, (char)0x0430, (char)0x044F, (char)0x0020, (char)0x0434, (char)0x0430, (char)0x0442, (char)0x0430 };
+        public static readonly char[] tagName = new char[0x16] { (char)0x041D, (char)0x0430, (char)0x0438, (char)0x043C, (char)0x0435, (char)0x043D, (char)0x043E, (char)0x0432, (char)0x0430, (char)0x043D, (char)0x0438, (char)0x0435, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x0435, (char)0x043F, (char)0x0430, (char)0x0440, (char)0x0430, (char)0x0442, (char)0x0430 };
+        public static readonly char[] tagSerial = new char[0x0F] { (char)0x0421, (char)0x0435, (char)0x0440, (char)0x0438, (char)0x044F, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x0435, (char)0x043F, (char)0x0430, (char)0x0440, (char)0x0430, (char)0x0442, (char)0x0430 };
+        public static readonly char[] tagNumbAppoint = new char[0x11] { (char)0x041A, (char)0x043E, (char)0x043B, (char)0x0438, (char)0x0447, (char)0x0435, (char)0x0441, (char)0x0442, (char)0x0432, (char)0x043E, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x0438, (char)0x0451, (char)0x043C, (char)0x0430 };
+        public static readonly char[] tagDateActual = new char[0x10] { (char)0x0424, (char)0x0430, (char)0x043A, (char)0x0442, (char)0x0438, (char)0x0447, (char)0x0435, (char)0x0441, (char)0x043A, (char)0x0430, (char)0x044F, (char)0x0020, (char)0x0434, (char)0x0430, (char)0x0442, (char)0x0430 };
+        public static readonly char[] tagDatePlan = new char[0x0D] { (char)0x041F, (char)0x043B, (char)0x0430, (char)0x043D, (char)0x043E, (char)0x0432, (char)0x0430, (char)0x044F, (char)0x0020, (char)0x0434, (char)0x0430, (char)0x0442, (char)0x0430 };
         public object this[in Field field, in Action act]
         {
             get
@@ -139,7 +139,8 @@ namespace REGOVID.Properties.Struct.Database.Tab
         public string Update => $"UPDATE [{Sheet.Вакцина}{(char)36}] SET [{Field.Наименование}]='{name}',[{Field.СерияПрепарата}]='{serial}',[{Field.Приём}]='{numbAppoint}',[{Field.ПлановаяДата}]='{datePlan}' WHERE [{Field.UNN}]={UNN} AND [{Field.ФактическаяДата}]='{dateActual}'";
         public string Search => $"SELECT [{Field.Наименование}],[{Field.СерияПрепарата}],[{Field.Приём}],[{Field.ФактическаяДата}],[{Field.ПлановаяДата}] FROM [{Sheet.Вакцина}{(char)36}] WHERE [{Field.Наименование}] LIKE '%{name}%' AND " +
                               $"[{Field.СерияПрепарата}] LIKE '%{serial}%' AND [{Field.Приём}] LIKE '%{numbAppoint}%' AND [{Field.ФактическаяДата}] LIKE '%{dateActual}%' AND [{Field.ПлановаяДата}] LIKE '%{datePlan}%' ORDER BY [{Field.Наименование}] ASC";
-        public string Delete => $"UPDATE [{Sheet.Вакцина}{(char)36}] SET [{Field.UNN}]=NULL,[{Field.Наименование}]=NULL,[{Field.СерияПрепарата}]=NULL,[{Field.Приём}]=NULL,[{Field.ФактическаяДата}]=NULL,[{Field.ПлановаяДата}]=NULL WHERE [{Field.UNN}]={UNN} AND [{Field.ФактическаяДата}]='{dateActual}'";
+        public string Delete => $"UPDATE [{Sheet.Вакцина}{(char)36}] SET [{Field.UNN}]=NULL,[{Field.Наименование}]=NULL,[{Field.СерияПрепарата}]=NULL,[{Field.Приём}]=NULL,[{Field.ФактическаяДата}]=NULL,[{Field.ПлановаяДата}]=NULL WHERE [{Field.UNN}]={UNN}'";
+        string IRecord.Delete => $"UPDATE [{Sheet.Вакцина}{(char)36}] SET [{Field.UNN}]=NULL,[{Field.Наименование}]=NULL,[{Field.СерияПрепарата}]=NULL,[{Field.Приём}]=NULL,[{Field.ФактическаяДата}]=NULL,[{Field.ПлановаяДата}]=NULL WHERE [{Field.UNN}]={UNN} AND [{Field.ФактическаяДата}]='{dateActual}'";
         public override string ToString() => name + (char)0x3B + serial + (char)0x3B + numbAppoint + (char)0x3B + dateActual + (char)0x3B + datePlan;
     }
 }
@@ -256,6 +257,8 @@ namespace REGOVID.Properties.Struct.Database
                         return new Vaccine(NameVaccine, Serial, NumbAppoint, DateActual, DatePlan).Search;
                     case "Удалить,Patient":
                         return new Patient(Slf, BirthYear, HomeAddr, Company, Occupation).Delete;
+                    case "Удалить,Vaccine":
+                        return new Vaccine(NameVaccine, Serial, NumbAppoint, DateActual, DatePlan).Delete;
                     default:
                         return null;
                 }

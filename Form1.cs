@@ -39,7 +39,7 @@ namespace REGOVID
             InitializeComponent();
             timer1 = new Timer(components)
             {
-                Interval = 0x01F4   // 500 millisecs - a half of 1 sec
+                Interval = 0x01F4   // a half of 0x01 sec
             };
             width = Math.Abs(Width);
             height = Math.Abs(Height);
@@ -98,7 +98,7 @@ namespace REGOVID
                         case true:
                             switch (sheet)
                             {
-                                case 0x00:   // concerning Пациент sheet
+                                case 0x00:   // concerning Пациент
                                     ExecSQLtoSet(patient.GetNotExisted, out Queue container);
                                     switch (string.IsNullOrEmpty(container.Peek().ToString()))
                                     {
@@ -129,7 +129,7 @@ namespace REGOVID
                                     }
                                     ExecSQLPlural(senders[ops.Action.Записать, patient].ToString());
                                     break;
-                                case 0x05:   // concerning Вакцина sheet
+                                case 0x05:   // concerning Вакцина
                                     ExecSQLtoSet(vaccine.GetNotExisted, out container);
                                     switch (string.IsNullOrEmpty(container.Peek().ToString()))
                                     {
@@ -184,14 +184,13 @@ namespace REGOVID
                                 ConfineFields(senders.ToString(), indStart, condition);   // gather those indexes of GUI input fields that are planning to be modified, otherwise ignore input from the range of fields. No system interrupts as consequence
                             custContainer[0x01] = senders.ToString();
                             ExecSQLtoSet(((iops.IField)patient).FindByName, out Queue container);   // seek by input - ФИО, GUI field
-                            for (timer1.Start(); container.Count > default(uint); hintSign = default)   // on iteration: reset sign of hint for those GUI input fields to its default
+                            for (timer1.Start(); container.Count > uint.MinValue; hintSign = default)   // on iteration: reset sign of hint for those GUI input fields to its default
                             {
-                                reg.Record.UN = container.Dequeue();   // take one off
-                                var store = ExecSQLtoSet(((iops.IField)new reg.Tab.Patient(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty)).FindByUN);   // fetch the complete record
+                                var store = ExecSQLtoSet(((iops.IField)new reg.Tab.Patient(container.Dequeue())).FindByUN);   // fetch the complete record
                                 foreach (DataRow element in store.Rows)   // element supposes to have 0x0A columns by SQL output fields
                                 {
-                                    for (var i = byte.MinValue; i < element.Table.Columns.Count; i++)   // on init: index which has relation is one-to-many
-                                        SetFieldsText(i, element[i]);   // 8th index has relation is many-to-one
+                                    for (var index = byte.MinValue; index < element.Table.Columns.Count; index++)   // on init: 0th index has relation is one-to-many
+                                        SetFieldsText(index, element[index]);   // 8th index has relation is many-to-one
                                     custContainer[0x02] = textBox1.Text + separator + label1.Text + separator + textBox2.Text + separator + textBox3.Text + separator + textBox4.Text + separator + textBox5.Text + separator + textBox6.Text + separator + label2.Text + separator + label3.Text + separator + label4.Text;
                                     switch (GetMsg(string.Empty + (char)0x041F + (char)0x0440 + (char)0x0438 + (char)0x043C + (char)0x0435 + (char)0x043D + (char)0x0438 + (char)0x0442 + (char)0x044C + (char)0x0020 + (char)0x044D +
                                                    (char)0x0442 + (char)0x043E + (char)0x0020 + (char)0x0438 + (char)0x0437 + (char)0x043C + (char)0x0435 + (char)0x043D + (char)0x0435 + (char)0x043D + (char)0x0438 + (char)0x0435 +
@@ -215,7 +214,7 @@ namespace REGOVID
                                             patient = new reg.Tab.Patient(objSet.Dequeue().ToString(), objSet.Dequeue().ToString(), objSet.Dequeue().ToString(), objSet.Dequeue().ToString(), objSet.Dequeue().ToString());
                                             vaccine = new reg.Tab.Vaccine(objSet.Dequeue().ToString(), objSet.Dequeue().ToString(), objSet.Dequeue().ToString(), objSet.Dequeue().ToString(), objSet.Dequeue().ToString());
                                             ExecSQLPlural(patient.Update, vaccine.Update);
-                                            SetFieldsColour(SystemColors.Window);   // restore colour of those GUI input fields
+                                            SetFieldsColour(SystemColors.Window);   // restore colour back
                                             CLS();   // reset GUI input(by user|fetched) of fields
                                             SetScene(GetMsg(string.Empty + (char)0x0417 + (char)0x0430 + (char)0x043F + (char)0x0438 + (char)0x0441 + (char)0x044C + (char)0x0020 + (char)0x0443 + (char)0x0441 + (char)0x043F +
                                                             (char)0x0435 + (char)0x0448 + (char)0x043D + (char)0x043E + (char)0x0020 + (char)0x0438 + (char)0x0441 + (char)0x043F + (char)0x0440 + (char)0x0430 + (char)0x0432 +
@@ -248,9 +247,9 @@ namespace REGOVID
                             }
                         default:
                             SetScene(GetMsg(string.Empty + (char)0x0412 + (char)0x043E + (char)0x0437 + (char)0x043D + (char)0x0438 + (char)0x043A + (char)0x043B + (char)0x0438 + (char)0x0020 + (char)0x043D + (char)0x0435 + (char)0x043A +
-                                                (char)0x043E + (char)0x0442 + (char)0x043E + (char)0x0440 + (char)0x044B + (char)0x0435 + (char)0x0020 + (char)0x0442 + (char)0x0440 + (char)0x0443 + (char)0x0434 + (char)0x043D + (char)0x043E +
-                                                (char)0x0441 + (char)0x0442 + (char)0x0438 + (char)0x002C + (char)0x0020 + (char)0x043F + (char)0x0440 + (char)0x043E + (char)0x0434 + (char)0x043E + (char)0x043B + (char)0x0436 + (char)0x0438 +
-                                                (char)0x0442 + (char)0x044C + (char)0x003F));
+                                            (char)0x043E + (char)0x0442 + (char)0x043E + (char)0x0440 + (char)0x044B + (char)0x0435 + (char)0x0020 + (char)0x0442 + (char)0x0440 + (char)0x0443 + (char)0x0434 + (char)0x043D + (char)0x043E +
+                                            (char)0x0441 + (char)0x0442 + (char)0x0438 + (char)0x002C + (char)0x0020 + (char)0x043F + (char)0x0440 + (char)0x043E + (char)0x0434 + (char)0x043E + (char)0x043B + (char)0x0436 + (char)0x0438 +
+                                            (char)0x0442 + (char)0x044C + (char)0x003F));
                             return;
                     }
                 case "Поиск":
@@ -259,10 +258,10 @@ namespace REGOVID
                         case true:
                             switch (sheet)
                             {
-                                case 0x00:   // concerning Пациент sheet
+                                case 0x00:   // concerning Пациент
                                     dataGridView1.DataSource = ExecSQLtoSet(senders[ops.Action.Поиск, patient].ToString()).DefaultView;
                                     break;
-                                case 0x05:   // concerning Вакцина sheet
+                                case 0x05:   // concerning Вакцина
                                     dataGridView1.DataSource = ExecSQLtoSet(senders[ops.Action.Поиск, vaccine].ToString()).DefaultView;
                                     break;
                                 default:
@@ -286,26 +285,43 @@ namespace REGOVID
                             var tabWarnSheet = new char[0x25] { (char)0x041A, (char)0x043E, (char)0x043D, (char)0x043A, (char)0x0440, (char)0x0435, (char)0x0442, (char)0x0438, (char)0x0437, (char)0x0438, (char)0x0440, (char)0x0443, (char)0x0439,
                                                                 (char)0x0442, (char)0x0435, (char)0x0020, (char)0x043A, (char)0x0440, (char)0x0438, (char)0x0442, (char)0x0435, (char)0x0440, (char)0x0438, (char)0x0439, (char)0x002C, (char)0x0020,
                                                                 (char)0x043F, (char)0x0440, (char)0x043E, (char)0x0434, (char)0x043E, (char)0x043B, (char)0x0436, (char)0x0438, (char)0x0442, (char)0x044C, (char)0x003F };
-                            var index = default(byte);   // reserved for amount of valid criteria
+                            var index = byte.MinValue;   // reserved for amount of valid criteria
                             switch (sheet)
                             {
-                                case 0x00:   // delete Пациент record by any criterion(GUI input field)
-                                    var store = new DataTable[0x05];   // on instantiation: the size of intended criteria
+                                case 0x00:   // Пациент record by any criterion(GUI input field)
+                                    var listUN = string.Empty;   // despite being declared, reserved for enumerating DISTINCT(IDN)s
+                                    var store = new DataTable[0x05];   // on instantiation: the size of intended criteria within Пациент
                                     for (var indField = name.Field.ФИО; indField <= name.Field.Должность; indField++)
                                         switch (string.IsNullOrEmpty(senders[indField].ToString()))
                                         {
                                             case false:
                                                 store[index] = ExecSQLtoSet(patient[indField, ops.Action.Поиск].ToString());   // fetch Пациент record
-                                                switch (store[index++].Rows.Count == byte.MinValue)   // exclude non-existent criteria
+                                                switch (store[index].Rows.Count == byte.MinValue)   // exclude non-existent criteria
                                                 {
                                                     case true:
                                                         SetFieldTextsColour((byte)(indField - 0x01), Color.Salmon);   // mark out invalid criteria
                                                         SetScene(GetMsg(GetTextFormatted(tabWarnField, nil.ToString().ToCharArray())));
                                                         return;   // interrupt it once to let apply corrections
                                                 }
+                                                for (var number = store[index].Rows.Count - 0x01; number >= byte.MinValue; number--)   // on init: amount of received rows in current Table - SQL output
+                                                    switch (listUN.Contains(store[index].Rows[number][name.Field.IDN.ToString()].ToString()))   // seen such IDN, already
+                                                    {
+                                                        case true:
+                                                            store[index].Rows.Remove(store[index].Rows[number]);   // delete(roll back) duplicate row in the Table
+                                                            continue;
+                                                        default:
+                                                            listUN += store[index].Rows[number][name.Field.IDN.ToString()].ToString() + (char)0x0020;   // add new value of IDN to list
+                                                            continue;
+                                                    }
+                                                switch (store[index].Rows.Count == byte.MinValue)   // current Table has still leftover rows
+                                                {
+                                                    case false:
+                                                        index++;
+                                                        continue;
+                                                }
                                                 continue;
                                         }
-                                    for (; ~index < -0x01; index--)   // on iteration: read backwards SQL outputs by each criterion
+                                    for (; ~index < -0x01; index--)   // on iteration: read the SQL outputs backwards by each criterion
                                         for (var number = store[index - 0x01].Rows.Count - 0x01; number >= byte.MinValue; number--)   // on init: amount of received rows in certain Table - SQL output
                                         {
                                             for (var indField = name.Field.ФИО; indField <= name.Field.Должность; indField++)
@@ -322,23 +338,40 @@ namespace REGOVID
                                             }
                                         }
                                     break;
-                                case 0x05:   // delete Вакцина record by any criterion(GUI input field)
-                                    store = new DataTable[0x05];   // on instantiation: the size of intended criteria
+                                case 0x05:   // Вакцина record by any criterion(GUI input field)
+                                    store = new DataTable[0x05];   // on instantiation: the size of intended criteria within Вакцина
+                                    listUN = string.Empty;   // reserved for enumerating DISTINCT(UNN)s
                                     for (var indField = name.Field.Наименование; indField <= name.Field.ПлановаяДата; indField++)
                                         switch (string.IsNullOrEmpty(senders[indField].ToString()))
                                         {
                                             case false:
-                                                store[index] = ExecSQLtoSet(vaccine[indField, ops.Action.Поиск].ToString());   // fetch Пациент record
-                                                switch (store[index++].Rows.Count == byte.MinValue)   // exclude non-existent criteria
+                                                store[index] = ExecSQLtoSet(vaccine[indField, ops.Action.Поиск].ToString());   // fetch Вакцина record
+                                                switch (store[index].Rows.Count == byte.MinValue)   // exclude non-existent criteria
                                                 {
                                                     case true:
                                                         SetFieldTextsColour((byte)(indField - 0x01), Color.Salmon);   // mark out invalid criteria
                                                         SetScene(GetMsg(GetTextFormatted(tabWarnField, nil.ToString().ToCharArray())));
                                                         return;   // interrupt it once to let apply corrections
                                                 }
+                                                for (var number = store[index].Rows.Count - 0x01; number >= byte.MinValue; number--)   // on init: amount of received rows in current Table - SQL output
+                                                    switch (listUN.Contains(store[index].Rows[number][name.Field.UNN.ToString()].ToString()))   // seen such UNN, already
+                                                    {
+                                                        case true:
+                                                            store[index].Rows.Remove(store[index].Rows[number]);   // delete(roll back) duplicate row in the Table
+                                                            continue;
+                                                        default:
+                                                            listUN += store[index].Rows[number][name.Field.UNN.ToString()].ToString() + (char)0x0020;   // add new value of IDN to list
+                                                            continue;
+                                                    }
+                                                switch (store[index].Rows.Count == byte.MinValue)   // current Table has still leftover rows
+                                                {
+                                                    case false:
+                                                        index++;
+                                                        continue;
+                                                }
                                                 continue;
                                         }
-                                    for (; ~index < -0x01; index--)   // on iteration: read backwards SQL outputs by each criterion
+                                    for (; ~index < -0x01; index--)   // on iteration: read the SQL outputs backwards by each criterion
                                         for (var number = store[index - 0x01].Rows.Count - 0x01; number >= byte.MinValue; number--)   // on init: amount of received rows in certain Table - SQL output
                                         {
                                             for (var indField = name.Field.Наименование; indField <= name.Field.ПлановаяДата; indField++)
@@ -354,7 +387,7 @@ namespace REGOVID
                                             }
                                         }
                                     break;
-                                default:   // delete complete record that holds one(at once) unique number by any criterion(GUI input field)
+                                default:   // the complete record that holds one(at once) unique number by any criterion(GUI input field)
                                     store = new DataTable[0x01];   // on instantiation: the size of one criterion that consists of GUI input fields
                                     store[index] = ExecSQLtoSet(senders[ops.Action.Удалить].ToString());   // fetch complete record
                                     switch (store[index++].Rows.Count == byte.MinValue)   // exclude non-existent criteria
@@ -372,12 +405,12 @@ namespace REGOVID
                                                                 SetScene(GetMsg(GetTextFormatted(tabWarnField, nil.ToString().ToCharArray())));
                                                                 return;   // interrupt it once to let apply corrections
                                                         }
-                                                        switch (ExecSQLtoSet(((iops.IField)new reg.Tab.Patient(objField.Rows[default(byte)][default(byte)])).FindByUN).Rows.Count == byte.MinValue)
+                                                        switch (ExecSQLtoSet(((iops.IField)new reg.Tab.Patient(objField.Rows[byte.MinValue][name.Field.IDN.ToString()])).FindByUN).Rows.Count == byte.MinValue)
                                                         {
-                                                            case true:   // there is no relationship, just
+                                                            case true:   // there is no relationship with Вакцина, just
                                                                 SetFieldTextsColour((byte)(indField - 0x01), Color.Silver);   // mark out inconsistent criterion
                                                                 SetScene(GetMsg(GetTextFormatted(tabWarnSheet, nil.ToString().ToCharArray())));
-                                                                return;   // interrupt it once to let specify criteria
+                                                                return;   // interrupt it once to let specify criterion
                                                         }
                                                         continue;
                                                 }
@@ -386,25 +419,25 @@ namespace REGOVID
                                                 {
                                                     case false:
                                                         var objField = ExecSQLtoSet(vaccine[indField, ops.Action.Поиск].ToString());
-                                                        switch (ExecSQLtoSet(vaccine[indField, ops.Action.Поиск].ToString()).Rows.Count == byte.MinValue)
+                                                        switch (objField.Rows.Count == byte.MinValue)
                                                         {
                                                             case true:
                                                                 SetFieldTextsColour((byte)(indField - 0x01), Color.Salmon);   // mark out invalid criterion
                                                                 SetScene(GetMsg(GetTextFormatted(tabWarnField, nil.ToString().ToCharArray())));
                                                                 return;   // interrupt it once to let apply corrections
                                                         }
-                                                        switch (ExecSQLtoSet(((iops.IField)new reg.Tab.Vaccine(objField.Rows[default(byte)][default(byte)], string.Empty)).FindByUN).Rows.Count == byte.MinValue)
+                                                        switch (ExecSQLtoSet(((iops.IField)new reg.Tab.Vaccine(objField.Rows[byte.MinValue][name.Field.UNN.ToString()], string.Empty)).FindByUN).Rows.Count == byte.MinValue)
                                                         {
-                                                            case true:   // there is no relationship, just
+                                                            case true:   // there is no relationship with Пациент, just
                                                                 SetFieldTextsColour((byte)(indField - 0x01), Color.Silver);   // mark out inconsistent criterion
                                                                 SetScene(GetMsg(GetTextFormatted(tabWarnSheet, nil.ToString().ToCharArray())));
-                                                                return;   // interrupt it once to let specify criteria
+                                                                return;   // interrupt it once to let specify criterion
                                                         }
                                                         continue;
                                                 }
                                             return;
                                     }
-                                    for (; ~index < -0x01; index--)   // on iteration: read backwards SQL outputs by each criterion
+                                    for (; ~index < -0x01; index--)   // on iteration: read the SQL outputs backwards by each criterion
                                         for (var number = store[index - 0x01].Rows.Count - 0x01; number >= byte.MinValue; number--)   // on init: amount of received rows in certain Table - SQL output
                                         {
                                             for (var indField = name.Field.ФИО; indField <= name.Field.ПлановаяДата; indField++)
@@ -413,8 +446,8 @@ namespace REGOVID
                                                            (char)0x0438 + (char)0x0441 + (char)0x044C + (char)0x003F) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
                                             {
                                                 case true:
-                                                    reg.Record.UN = store[index - 0x01].Rows[number][default(byte)];   // supposes to have unique number of complete record(e.g. IDN matches UNN)
-                                                    ExecSQLPlural(senders[ops.Action.Удалить, patient].ToString(), new reg.Tab.Vaccine(reg.Record.UN, label3.Text).Delete);
+                                                    reg.Record.UN = store[index - 0x01].Rows[number][name.Field.IDN.ToString()];   // supposes that IDN matches UNN as a complete record
+                                                    ExecSQLPlural(senders[ops.Action.Удалить, patient].ToString(), ((iops.IRecord)new reg.Tab.Vaccine(reg.Record.UN, label3.Text)).Delete);
                                                     CLS();   // display the action - "Удалить" on GUI
                                                     SetScene(GetMsg(GetTextFormatted(tabWarn, nil.ToString().ToCharArray())), senders);
                                                     return;
@@ -423,10 +456,15 @@ namespace REGOVID
                                     break;
                             }
                             for (var indField = name.Field.ФИО; indField <= name.Field.ПлановаяДата; indField++)
-                                SetFieldsText((byte)(indField - 0x01), senders[indField]);   // restore text of those GUI input fields that user had entered
+                                SetFieldsText((byte)(indField - 0x01), senders[indField]);   // restore text of those GUI input fields that user had entered. Useless SetScene(string.Empty, senders) might be used to optimize the code
+                            return;
+                        default:
+                            SetScene(GetMsg(string.Empty + (char)0x0412 + (char)0x043E + (char)0x0437 + (char)0x043D + (char)0x0438 + (char)0x043A + (char)0x043B + (char)0x0438 + (char)0x0020 + (char)0x043D + (char)0x0435 + (char)0x043A +
+                                            (char)0x043E + (char)0x0442 + (char)0x043E + (char)0x0440 + (char)0x044B + (char)0x0435 + (char)0x0020 + (char)0x0442 + (char)0x0440 + (char)0x0443 + (char)0x0434 + (char)0x043D + (char)0x043E +
+                                            (char)0x0441 + (char)0x0442 + (char)0x0438 + (char)0x002C + (char)0x0020 + (char)0x043F + (char)0x0440 + (char)0x043E + (char)0x0434 + (char)0x043E + (char)0x043B + (char)0x0436 + (char)0x0438 +
+                                            (char)0x0442 + (char)0x044C + (char)0x003F));
                             return;
                     }
-                    return;
             }
         }
         private void button1_MouseEnter(object sender, EventArgs e)
@@ -882,7 +920,7 @@ namespace REGOVID
                     switch (sender.Length == onset)   // does it equal to sent GUI input fields
                     {
                         case true:
-                            switch (summary[0x01] > summary[0x02])   // concerning Пациент sheet
+                            switch (summary[0x01] > summary[0x02])   // concerning Пациент
                             {
                                 case true:
                                     switch (GetMsg(GetTextFormatted(tabWarnVaccine, nil.ToString().ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
@@ -892,7 +930,7 @@ namespace REGOVID
                                     }
                                     break;
                             }
-                            switch (summary[0x02] > summary[0x01])   // concerning Вакцина sheet
+                            switch (summary[0x02] > summary[0x01])   // concerning Вакцина
                             {
                                 case true:
                                     switch (GetMsg(GetTextFormatted(tabWarnPatient, nil.ToString().ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
@@ -918,7 +956,7 @@ namespace REGOVID
                     switch (sender.Length == onset)   // does it equal to sent GUI input fields
                     {
                         case true:
-                            switch (summary[0x01] > summary[0x02])   // concerning Пациент sheet
+                            switch (summary[0x01] > summary[0x02])   // concerning Пациент
                             {
                                 case true:
                                     switch (GetMsg(GetTextFormatted(tabWarnVaccine, nil.ToString().ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
@@ -929,7 +967,7 @@ namespace REGOVID
                                     }
                                     break;
                             }
-                            switch (summary[0x02] > summary[0x01])   // concerning Вакцина sheet
+                            switch (summary[0x02] > summary[0x01])   // concerning Вакцина
                             {
                                 case true:
                                     switch (GetMsg(GetTextFormatted(tabWarnPatient, nil.ToString().ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
@@ -947,7 +985,7 @@ namespace REGOVID
                     switch (sender.Length == onset)   // does it equal to sent GUI input fields
                     {
                         case true:
-                            switch (summary[0x01] > summary[0x02])   // concerning Пациент sheet
+                            switch (summary[0x01] > summary[0x02])   // concerning Пациент
                             {
                                 case true:
                                     switch (GetMsg(GetTextFormatted(tabWarnVaccine, nil.ToString().ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
@@ -958,7 +996,7 @@ namespace REGOVID
                                     }
                                     break;
                             }
-                            switch (summary[0x02] > summary[0x01])   // concerning Вакцина sheet
+                            switch (summary[0x02] > summary[0x01])   // concerning Вакцина
                             {
                                 case true:
                                     switch (GetMsg(GetTextFormatted(tabWarnPatient, nil.ToString().ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)

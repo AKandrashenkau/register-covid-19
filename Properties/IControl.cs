@@ -11,7 +11,7 @@
     {
         string GetNext { get; }   // fetch the highest unique value and increase its by one
         string GetNotExisted { get; }   // fetch missed unique value(s) by comparing with different sheet
-        string FindByUN { get; }
+        string FindByUN { get; }   // fetch record by unique value
         string FindByName { get; }   // fetch record by GUI input field - either ФИО or Наименование
     }
 }
