@@ -17,24 +17,24 @@ namespace REGOVID
         private readonly int width;    // reserved for working on initialized clientWidth
         private readonly int height;   // reserved for working on initialized clientHeight
         private readonly string dtBase;
-        private readonly string[] custContainer;   // serves for action - "Изменить" to gather indexes, GUI input fields and database output
+        private readonly string[] custContainer;
         private const char nil = (char)0;
         private const char separator = (char)59;   // divides customized container into human-readable view that is consisting of GUI input fields
         private delegate void Action(in byte index, in object sender);
-        private readonly Action hint;   // serves for action - "Изменить" to indicate where data amendment is applied
-        private bool hintSign;   // serves for action - "Изменить"
+        private readonly Action hint;
+        private bool snap;   // reserved for resetting flashing colours
         public Form1()
         {
             dtBase = $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='{Environment.GetEnvironmentVariable(string.Empty + (char)0x0050 + (char)0x0072 + (char)0x006F + (char)0x0067 + (char)0x0072 + (char)0x0061 + (char)0x006D +
                         (char)0x0044 + (char)0x0061 + (char)0x0074 + (char)0x0061) + (char)0x005C + (char)0x0056 + (char)0x0069 + (char)0x006C + (char)0x0043 + (char)0x0052 + (char)0x0042 + (char)0x005C + (char)0x0064 +
                         (char)0x0074 + (char)0x0042 + (char)0x0061 + (char)0x0073 + (char)0x0065 + (char)0x002E + (char)0x0078 + (char)0x006C + (char)0x0073 + (char)0x0062}';Extended Properties='Excel 12.0;HDR=Yes'";
-            hint = SetFieldsColour;
-            hint += SetFieldsText;
+            hint = SetFieldsColour;   // serves for action - "Изменить" to indicate where data amendment is applied
+            hint += SetFieldsText;   // serves for action - "Изменить" to indicate what data amendment is applied
             custContainer = new string[0x03]
             {
-                string.Empty,   // on action - "Изменить" for taking indexes of GUI input fields from user
+                string.Empty,   // on action - "Изменить" for gathering indices of GUI input fields from user
                 string.Empty,   // on action - "Изменить" for taking text of GUI input fields from user
-                string.Empty    // on action - "Изменить" for taking complete record - fields from database
+                string.Empty    // on action - "Изменить" for taking complete record from database
             };
             InitializeComponent();
             timer1 = new Timer(components)
@@ -90,7 +90,7 @@ namespace REGOVID
                 (char)52,   // ФактическаяДата
                 (char)52    // ПлановаяДата
             };
-            switch (sender.ToString().Split((char)0x002C)[0x01].Split((char)0x003A)[0x01].Split((char)0x0020)[0x01])   // determine action by GUI item
+            switch (sender.ToString().Split((char)0x002C)[0x01].Split((char)0x003A)[0x01].Split((char)0x0020)[0x01])   // determine action by GUI output
             {
                 case "Записать":
                     switch (Handler((byte)ops.Action.Записать, out byte sheet, condition, senders.Slf, senders.BirthYear, senders.HomeAddr, senders.Company, senders.Occupation, senders.NameVaccine, senders.Serial, senders.NumbAppoint, senders.DateActual, senders.DatePlan))
@@ -181,12 +181,14 @@ namespace REGOVID
                     {
                         case true:
                             for (byte indStart = (byte)name.Field.Год - 0x01, indEnd = (byte)name.Field.ПлановаяДата; indStart < indEnd; indStart++)   // validity-check of inputs in range from Год to ПлановаяДата GUI fields
-                                ConfineFields(senders.ToString(), indStart, condition);   // gather those indexes of GUI input fields that are planning to be modified, otherwise ignore input from the range of fields. No system interrupts as consequence
+                                ConfineFields(senders.ToString(), indStart, condition);   // gather those indices of GUI input fields that are planning to be modified, otherwise ignore input from the range of fields. No system interrupts as consequence
                             custContainer[0x01] = senders.ToString();
                             ExecSQLtoSet(((iops.IField)patient).FindByName, out Queue container);   // seek by input - ФИО, GUI field
-                            for (timer1.Start(); container.Count > uint.MinValue; hintSign = default)   // on iteration: reset sign of hint for those GUI input fields to its default
+                            timer1.Tick += new EventHandler(SetHint);
+                            for (timer1.Start(); container.Count > uint.MinValue; snap = default)   // on iteration: reset sign of hint for those GUI input fields to its default
                             {
-                                var store = ExecSQLtoSet(((iops.IField)new reg.Tab.Patient(container.Dequeue())).FindByUN);   // fetch the complete record
+                                reg.Record.UN = container.Dequeue();   // take one off
+                                var store = ExecSQLtoSet(((iops.IField)new reg.Tab.Patient(reg.Record.UN)).FindByUN);   // fetch the complete record
                                 foreach (DataRow element in store.Rows)   // element supposes to have 0x0A columns by SQL output fields
                                 {
                                     for (var index = byte.MinValue; index < element.Table.Columns.Count; index++)   // on init: 0th index has relation is one-to-many
@@ -198,6 +200,7 @@ namespace REGOVID
                                     {
                                         case true:
                                             timer1.Stop();   // cease hinting
+                                            timer1.Tick -= new EventHandler(SetHint);
                                             var objSet = new Queue();
                                             for (var fieldInd = byte.MinValue; fieldInd < (byte)name.Field.ПлановаяДата; fieldInd++)   // on init: counter for GUI index fields
                                             {
@@ -231,6 +234,7 @@ namespace REGOVID
                                 }
                             }
                             timer1.Stop();   // cease hinting
+                            timer1.Tick -= new EventHandler(SetHint);
                             switch (string.IsNullOrEmpty(custContainer[0x02]))
                             {
                                 case true:
@@ -289,8 +293,8 @@ namespace REGOVID
                             switch (sheet)
                             {
                                 case 0x00:   // Пациент record by any criterion(GUI input field)
-                                    var listUN = string.Empty;   // despite being declared, reserved for enumerating DISTINCT(IDN)s
                                     var store = new DataTable[0x05];   // on instantiation: the size of intended criteria within Пациент
+                                    var listUN = string.Empty;   // despite being declared, reserved for enumerating DISTINCT(IDN)s
                                     for (var indField = name.Field.ФИО; indField <= name.Field.Должность; indField++)
                                         switch (string.IsNullOrEmpty(senders[indField].ToString()))
                                         {
@@ -360,7 +364,7 @@ namespace REGOVID
                                                             store[index].Rows.Remove(store[index].Rows[number]);   // delete(roll back) duplicate row in the Table
                                                             continue;
                                                         default:
-                                                            listUN += store[index].Rows[number][name.Field.UNN.ToString()].ToString() + (char)0x0020;   // add new value of IDN to list
+                                                            listUN += store[index].Rows[number][name.Field.UNN.ToString()].ToString() + (char)0x0020;   // add new value of UNN to list
                                                             continue;
                                                     }
                                                 switch (store[index].Rows.Count == byte.MinValue)   // current Table has still leftover rows
@@ -380,17 +384,17 @@ namespace REGOVID
                                                            (char)0x0438 + (char)0x0441 + (char)0x044C + (char)0x0020 + (char)0x0432 + (char)0x0430 + (char)0x043A + (char)0x0446 + (char)0x0438 + (char)0x043D + (char)0x044B + (char)0x003F) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
                                             {
                                                 case true:
-                                                    ExecSQLPlural(new reg.Tab.Vaccine(store[index - 0x01].Rows[number][name.Field.UNN.ToString()], label3.Text).Delete);
+                                                    ExecSQLPlural(((iops.IRecord)new reg.Tab.Vaccine(store[index - 0x01].Rows[number][name.Field.UNN.ToString()], label3.Text)).Delete);
                                                     CLS();   // display the action - "Удалить" on GUI
                                                     SetScene(GetMsg(GetTextFormatted(tabWarn, nil.ToString().ToCharArray())), senders);
                                                     return;
                                             }
                                         }
                                     break;
-                                default:   // the complete record that holds one(at once) unique number by any criterion(GUI input field)
+                                default:   // the complete record that belongs to single unique number by any criterion(GUI input field)
                                     store = new DataTable[0x01];   // on instantiation: the size of one criterion that consists of GUI input fields
                                     store[index] = ExecSQLtoSet(senders[ops.Action.Удалить].ToString());   // fetch complete record
-                                    switch (store[index++].Rows.Count == byte.MinValue)   // exclude non-existent criteria
+                                    switch (store[index].Rows.Count == byte.MinValue)   // exclude non-existent criteria
                                     {
                                         case true:
                                             for (var indField = name.Field.ФИО; indField <= name.Field.Должность; indField++)
@@ -421,7 +425,7 @@ namespace REGOVID
                                                         var objField = ExecSQLtoSet(vaccine[indField, ops.Action.Поиск].ToString());
                                                         switch (objField.Rows.Count == byte.MinValue)
                                                         {
-                                                            case true:
+                                                            case true:   // there is no such criterion, literally
                                                                 SetFieldTextsColour((byte)(indField - 0x01), Color.Salmon);   // mark out invalid criterion
                                                                 SetScene(GetMsg(GetTextFormatted(tabWarnField, nil.ToString().ToCharArray())));
                                                                 return;   // interrupt it once to let apply corrections
@@ -437,22 +441,21 @@ namespace REGOVID
                                                 }
                                             return;
                                     }
-                                    for (; ~index < -0x01; index--)   // on iteration: read the SQL outputs backwards by each criterion
-                                        for (var number = store[index - 0x01].Rows.Count - 0x01; number >= byte.MinValue; number--)   // on init: amount of received rows in certain Table - SQL output
+                                    for (var number = store[index].Rows.Count - 0x01; number >= byte.MinValue; number--)   // on init: amount of received rows in certain Table - SQL output
+                                    {
+                                        for (var indField = name.Field.ФИО; indField <= name.Field.ПлановаяДата; indField++)
+                                            SetFieldsText((byte)(indField - 0x01), store[index].Rows[number][indField.ToString()]);   // display the Table on GUI input fields
+                                        switch (GetMsg(string.Empty + (char)0x0423 + (char)0x0434 + (char)0x0430 + (char)0x043B + (char)0x0438 + (char)0x0442 + (char)0x044C + (char)0x0020 + (char)0x0437 + (char)0x0430 + (char)0x043F +
+                                                       (char)0x0438 + (char)0x0441 + (char)0x044C + (char)0x003F) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
                                         {
-                                            for (var indField = name.Field.ФИО; indField <= name.Field.ПлановаяДата; indField++)
-                                                SetFieldsText((byte)(indField - 0x01), store[index - 0x01].Rows[number][indField.ToString()]);   // display the Table on GUI input fields
-                                            switch (GetMsg(string.Empty + (char)0x0423 + (char)0x0434 + (char)0x0430 + (char)0x043B + (char)0x0438 + (char)0x0442 + (char)0x044C + (char)0x0020 + (char)0x0437 + (char)0x0430 + (char)0x043F +
-                                                           (char)0x0438 + (char)0x0441 + (char)0x044C + (char)0x003F) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
-                                            {
-                                                case true:
-                                                    reg.Record.UN = store[index - 0x01].Rows[number][name.Field.IDN.ToString()];   // supposes that IDN matches UNN as a complete record
-                                                    ExecSQLPlural(senders[ops.Action.Удалить, patient].ToString(), ((iops.IRecord)new reg.Tab.Vaccine(reg.Record.UN, label3.Text)).Delete);
-                                                    CLS();   // display the action - "Удалить" on GUI
-                                                    SetScene(GetMsg(GetTextFormatted(tabWarn, nil.ToString().ToCharArray())), senders);
-                                                    return;
-                                            }
+                                            case true:
+                                                reg.Record.UN = store[index].Rows[number][name.Field.IDN.ToString()];   // supposes that IDN matches UNN as a complete record
+                                                ExecSQLPlural(senders[ops.Action.Удалить, patient].ToString(), ((iops.IRecord)new reg.Tab.Vaccine(reg.Record.UN, label3.Text)).Delete);
+                                                CLS();   // display the action - "Удалить" on GUI
+                                                SetScene(GetMsg(GetTextFormatted(tabWarn, nil.ToString().ToCharArray())), senders);
+                                                return;
                                         }
+                                    }
                                     break;
                             }
                             for (var indField = name.Field.ФИО; indField <= name.Field.ПлановаяДата; indField++)
@@ -576,13 +579,13 @@ namespace REGOVID
             switch (!string.IsNullOrEmpty(custContainer[default]))
             {
                 case true:
-                    switch (hintSign ^= true)
+                    switch (snap ^= true)
                     {
                         case false:   // off
-                            SetFieldsHint(Convert.ToByte(custContainer[default].Split(separator).Length - 0x01), SystemColors.Window);   // amount of intended GUI input fields as indexes. Colour supposes to be default
+                            SetFieldsHint(Convert.ToByte(custContainer[default].Split(separator).Length - 0x01), SystemColors.Window);   // amount of intended GUI input fields as indices. Colour supposes to be default
                             return;
                         default:   // on
-                            SetFieldsHint(Convert.ToByte(custContainer[default].Split(separator).Length - 0x01), Color.Lime);   // amount of intended GUI input fields as indexes. Colour supposes to hint
+                            SetFieldsHint(Convert.ToByte(custContainer[default].Split(separator).Length - 0x01), Color.Lime);   // amount of intended GUI input fields as indices. Colour supposes to hint
                             return;
                     }
             }
@@ -590,9 +593,7 @@ namespace REGOVID
         private void SetFieldsHint(in byte capacity, in Color colour)
         {
             for (var index = byte.MinValue; index < capacity; index++)
-            {
                 hint?.Invoke(Convert.ToByte(custContainer[default].Split(separator)[index]), colour);
-            }
         }
         private OleDbConnection GetConnect()
         {
@@ -685,7 +686,7 @@ namespace REGOVID
                 case "Color [Window]":
                     return custContainer[0x01].Split(separator)[index];
                 case "Color [Lime]":
-                    switch (!string.IsNullOrEmpty(custContainer[0x02]))   // on action - "Изменить" the timer launches an event - hint
+                    switch (!string.IsNullOrEmpty(custContainer[0x02]))   // on action - "Изменить" the timer is launched before custContainer of second index is filled in
                     {
                         case true:
                             return custContainer[0x02].Split(separator)[index];
@@ -1243,7 +1244,7 @@ namespace REGOVID
                                     return;
                                 default:
                                     byte tmp = 0x15;   // on init: days after which are planned to repeat again
-                                    label4.Text = $"{dateTimePicker2.Value.AddDays(tmp).Day}.{dateTimePicker2.Value.AddDays(tmp).Month}.{dateTimePicker2.Value.AddDays(tmp).Year}";
+                                    label4.Text = Convert.ToDateTime($"{dateTimePicker2.Value.AddDays(tmp).Day}.{dateTimePicker2.Value.AddDays(tmp).Month}.{dateTimePicker2.Value.AddDays(tmp).Year}").ToString().Substring(0x00, 0x0A);   // keep leading zeros in front of day/month
                                     return;
                             }
                     }
@@ -1290,7 +1291,7 @@ namespace REGOVID
                             return;
                         default:
                             byte tmp = 0x15;   // on init: days after which are planned to repeat again
-                            label4.Text = $"{dateTimePicker2.Value.AddDays(tmp).Day}.{dateTimePicker2.Value.AddDays(tmp).Month}.{dateTimePicker2.Value.AddDays(tmp).Year}";
+                            label4.Text = Convert.ToDateTime($"{dateTimePicker2.Value.AddDays(tmp).Day}.{dateTimePicker2.Value.AddDays(tmp).Month}.{dateTimePicker2.Value.AddDays(tmp).Year}").ToString().Substring(0x00, 0x0A);   // keep leading zeros in front of day/month
                             return;
                     }
             }
@@ -1317,7 +1318,7 @@ namespace REGOVID
                             return;
                         default:
                             byte tmp = 0x15;   // on init: days after which are planned to repeat again
-                            label4.Text = $"{dateTimePicker2.Value.AddDays(tmp).Day}.{dateTimePicker2.Value.AddDays(tmp).Month}.{dateTimePicker2.Value.AddDays(tmp).Year}";
+                            label4.Text = Convert.ToDateTime($"{dateTimePicker2.Value.AddDays(tmp).Day}.{dateTimePicker2.Value.AddDays(tmp).Month}.{dateTimePicker2.Value.AddDays(tmp).Year}").ToString().Substring(0x00, 0x0A);   // keep leading zeros in front of day/month
                             return;
                     }
             }

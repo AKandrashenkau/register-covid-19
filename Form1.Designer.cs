@@ -316,10 +316,10 @@ namespace REGOVID
             // 
             this.label1.BackColor = System.Drawing.SystemColors.Window;
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(19, 54);
+            this.label1.Location = new System.Drawing.Point(19, 55);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(144, 19);
+            this.label1.Size = new System.Drawing.Size(144, 18);
             this.label1.TabIndex = 96;
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label1.MouseEnter += new System.EventHandler(this.label1_MouseEnter);
@@ -404,8 +404,6 @@ namespace REGOVID
             this.Name = "Form1";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.Shown += new System.EventHandler(this.Form1_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
