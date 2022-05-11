@@ -5,5 +5,5 @@
 }
 namespace REGOVID.Properties.Enum.Database.Operation
 {
-    enum Action : byte { None, Записать, Изменить, Поиск, Удалить }
+    enum Action : byte { None, Записать, Изменить, Поиск, Удалить }   // in case of display language en-US the DataRowAction of System.Data namespace might be used to optimize the code
 }

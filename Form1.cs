@@ -8,6 +8,7 @@ using name = REGOVID.Properties.Enum.Database;
 using ops = REGOVID.Properties.Enum.Database.Operation;
 using iops = REGOVID.Properties.Interface.Database.Operation;
 using reg = REGOVID.Properties.Struct.Database;
+using inf = REGOVID.Properties.Struct.Database.Info;
 
 namespace REGOVID
 {
@@ -18,7 +19,6 @@ namespace REGOVID
         private readonly int height;   // reserved for working on initialized clientHeight
         private readonly string dtBase;
         private readonly string[] custContainer;
-        private const char nil = (char)0;
         private const char separator = (char)59;   // divides customized container into human-readable view that is consisting of GUI input fields
         private delegate void Action(in byte index, in object sender);
         private readonly Action hint;
@@ -66,6 +66,7 @@ namespace REGOVID
         }
         private void button1_Click(object sender, EventArgs e)
         {
+            var msg = new inf.Message();
             var patient = new reg.Tab.Patient(textBox1.Text, label1.Text, textBox2.Text, textBox3.Text, textBox4.Text);
             var vaccine = new reg.Tab.Vaccine(textBox5.Text, textBox6.Text, label2.Text, label3.Text, label4.Text);
             var senders = new reg.Record(patient, vaccine);
@@ -103,9 +104,7 @@ namespace REGOVID
                                             {
                                                 reg.Record.UN = container.Dequeue();   // take one off
                                                 dataGridView1.DataSource = ExecSQLtoSet(string.Empty + vaccine[(name.Field)0xFE, ops.Action.Поиск]).DefaultView;   // SQL result
-                                                switch (GetMsg(string.Empty + (char)0x0421 + (char)0x043E + (char)0x0435 + (char)0x0434 + (char)0x0438 + (char)0x043D + (char)0x0438 + (char)0x0442 + (char)0x044C + (char)0x0020 + (char)0x0441 +   // Suggest unpaired IDN to connect with UNN
-                                                               (char)0x0020 + (char)0x0438 + (char)0x043D + (char)0x0444 + (char)0x043E + (char)0x0440 + (char)0x043C + (char)0x0430 + (char)0x0446 + (char)0x0438 + (char)0x0435 + (char)0x0439 +
-                                                               (char)0x0020 + (char)0x043E + (char)0x0020 + (char)0x0432 + (char)0x0430 + (char)0x043A + (char)0x0446 + (char)0x0438 + (char)0x043D + (char)0x0435 + (char)0x003F) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
+                                                switch (GetMsg(GetTextFormatted(msg[0xEB], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)   // suggest unpaired IDN to connect with UNN
                                                 {
                                                     case true:
                                                         container.Clear();   // interrupt the read-next
@@ -134,9 +133,7 @@ namespace REGOVID
                                             {
                                                 reg.Record.UN = container.Dequeue();   // take one off
                                                 dataGridView1.DataSource = ExecSQLtoSet(string.Empty + patient[(name.Field)0xFF, ops.Action.Поиск]).DefaultView;   // SQL result
-                                                switch (GetMsg(string.Empty + (char)0x0421 + (char)0x043E + (char)0x0435 + (char)0x0434 + (char)0x0438 + (char)0x043D + (char)0x0438 + (char)0x0442 + (char)0x044C + (char)0x0020 + (char)0x0441 +   // suggest unpaired UNN to connect with IDN
-                                                               (char)0x0020 + (char)0x0434 + (char)0x0430 + (char)0x043D + (char)0x043D + (char)0x044B + (char)0x043C + (char)0x0438 + (char)0x0020 + (char)0x043F + (char)0x0430 + (char)0x0446 +
-                                                               (char)0x0438 + (char)0x0435 + (char)0x043D + (char)0x0442 + (char)0x0430 + (char)0x003F) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
+                                                switch (GetMsg(GetTextFormatted(msg[0xED], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)   // suggest unpaired UNN to connect with IDN
                                                 {
                                                     case true:
                                                         container.Clear();   // interrupt the read-next
@@ -157,15 +154,10 @@ namespace REGOVID
                                     ExecSQLPlural(string.Empty + senders[ops.Action.Записать, patient], string.Empty + senders[ops.Action.Записать, vaccine]);
                                     break;
                             }
-                            SetScene(GetMsg(string.Empty + (char)0x0417 + (char)0x0430 + (char)0x043F + (char)0x0438 + (char)0x0441 + (char)0x044C + (char)0x0020 + (char)0x0443 + (char)0x0441 + (char)0x043F + (char)0x0435 + (char)0x0448 +
-                                                (char)0x043D + (char)0x043E + (char)0x0020 + (char)0x0434 + (char)0x043E + (char)0x0431 + (char)0x0430 + (char)0x0432 + (char)0x043B + (char)0x0435 + (char)0x043D + (char)0x0430 + (char)0x002C +
-                                                (char)0x0020 + (char)0x043F + (char)0x0440 + (char)0x043E + (char)0x0434 + (char)0x043E + (char)0x043B + (char)0x0436 + (char)0x0438 + (char)0x0442 + (char)0x044C + (char)0x003F));
+                            SetScene(GetMsg(GetTextFormatted(msg[0x00], (string.Empty + char.MinValue).ToCharArray())));
                             return;
                         default:
-                            SetScene(GetMsg(string.Empty + (char)0x0412 + (char)0x043E + (char)0x0437 + (char)0x043D + (char)0x0438 + (char)0x043A + (char)0x043B + (char)0x0438 + (char)0x0020 + (char)0x0442 + (char)0x0440 + (char)0x0443 +
-                                                (char)0x0434 + (char)0x043D + (char)0x043E + (char)0x0441 + (char)0x0442 + (char)0x0438 + (char)0x0020 + (char)0x0437 + (char)0x0430 + (char)0x043F + (char)0x0438 + (char)0x0441 + (char)0x0430 +
-                                                (char)0x0442 + (char)0x044C + (char)0x002C + (char)0x0020 + (char)0x043F + (char)0x0440 + (char)0x043E + (char)0x0434 + (char)0x043E + (char)0x043B + (char)0x0436 + (char)0x0438 + (char)0x0442 +
-                                                (char)0x044C + (char)0x003F));
+                            SetScene(GetMsg(GetTextFormatted(msg[0xFF], (string.Empty + char.MinValue).ToCharArray())));
                             return;
                     }
                 case "Изменить":   // handle only complete record(e.g. IDN matches UNN)
@@ -186,9 +178,7 @@ namespace REGOVID
                                     for (var index = byte.MinValue; index < element.Table.Columns.Count; index++)   // on init: 0th index has relation is one-to-many
                                         SetFieldsText(index, element[index]);   // 8th index has relation is many-to-one
                                     custContainer[0x02] = textBox1.Text + separator + label1.Text + separator + textBox2.Text + separator + textBox3.Text + separator + textBox4.Text + separator + textBox5.Text + separator + textBox6.Text + separator + label2.Text + separator + label3.Text + separator + label4.Text;
-                                    switch (GetMsg(string.Empty + (char)0x041F + (char)0x0440 + (char)0x0438 + (char)0x043C + (char)0x0435 + (char)0x043D + (char)0x0438 + (char)0x0442 + (char)0x044C + (char)0x0020 + (char)0x044D +
-                                                   (char)0x0442 + (char)0x043E + (char)0x0020 + (char)0x0438 + (char)0x0437 + (char)0x043C + (char)0x0435 + (char)0x043D + (char)0x0435 + (char)0x043D + (char)0x0438 + (char)0x0435 +
-                                                   (char)0x003F) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
+                                    switch (GetMsg(GetTextFormatted(msg[0xE9], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
                                     {
                                         case true:
                                             timer1.Stop();   // cease hinting
@@ -211,10 +201,7 @@ namespace REGOVID
                                             ExecSQLPlural(patient.Update, vaccine.Update);
                                             SetFieldsColour(SystemColors.Window);   // restore colour back
                                             CLS();   // reset GUI input(by user|fetched) of fields
-                                            SetScene(GetMsg(string.Empty + (char)0x0417 + (char)0x0430 + (char)0x043F + (char)0x0438 + (char)0x0441 + (char)0x044C + (char)0x0020 + (char)0x0443 + (char)0x0441 + (char)0x043F +
-                                                            (char)0x0435 + (char)0x0448 + (char)0x043D + (char)0x043E + (char)0x0020 + (char)0x0438 + (char)0x0441 + (char)0x043F + (char)0x0440 + (char)0x0430 + (char)0x0432 +
-                                                            (char)0x043B + (char)0x0435 + (char)0x043D + (char)0x0430 + (char)0x002C + (char)0x0020 + (char)0x043F + (char)0x0440 + (char)0x043E + (char)0x0434 + (char)0x043E +
-                                                            (char)0x043B + (char)0x0436 + (char)0x0438 + (char)0x0442 + (char)0x044C + (char)0x003F), senders);
+                                            SetScene(GetMsg(GetTextFormatted(msg[0x02], (string.Empty + char.MinValue).ToCharArray())), senders);
                                             return;   // finish iterating element up here due to foreach-loop
                                         default:   // decline
                                             custContainer[0x02] = string.Empty;
@@ -230,22 +217,14 @@ namespace REGOVID
                             switch (string.IsNullOrEmpty(custContainer[0x02]))
                             {
                                 case true:
-                                    SetScene(GetMsg(string.Empty + (char)0x041D + (char)0x0438 + (char)0x0447 + (char)0x0435 + (char)0x0433 + (char)0x043E + (char)0x0020 + (char)0x043D + (char)0x0435 + (char)0x0020 + (char)0x043D +
-                                                    (char)0x0430 + (char)0x0439 + (char)0x0434 + (char)0x0435 + (char)0x043D + (char)0x043E + (char)0x002C + (char)0x0020 + (char)0x043F + (char)0x0440 + (char)0x043E + (char)0x0434 +
-                                                    (char)0x043E + (char)0x043B + (char)0x0436 + (char)0x0438 + (char)0x0442 + (char)0x044C + (char)0x003F), senders);
+                                    SetScene(GetMsg(GetTextFormatted(msg[0xFD], (string.Empty + char.MinValue).ToCharArray())), senders);
                                     return;
                                 default:
-                                    SetScene(GetMsg(string.Empty + (char)0x0417 + (char)0x0430 + (char)0x043F + (char)0x0438 + (char)0x0441 + (char)0x044C + (char)0x0020 + (char)0x0443 + (char)0x0441 + (char)0x043F + (char)0x0435 +
-                                                    (char)0x0448 + (char)0x043D + (char)0x043E + (char)0x0020 + (char)0x0438 + (char)0x0441 + (char)0x043F + (char)0x0440 + (char)0x0430 + (char)0x0432 + (char)0x043B + (char)0x0435 +
-                                                    (char)0x043D + (char)0x0430 + (char)0x002C + (char)0x0020 + (char)0x043F + (char)0x0440 + (char)0x043E + (char)0x0434 + (char)0x043E + (char)0x043B + (char)0x0436 + (char)0x0438 +
-                                                    (char)0x0442 + (char)0x044C + (char)0x003F), senders);
+                                    SetScene(GetMsg(GetTextFormatted(msg[0x02], (string.Empty + char.MinValue).ToCharArray())), senders);
                                     return;
                             }
                         default:
-                            SetScene(GetMsg(string.Empty + (char)0x0412 + (char)0x043E + (char)0x0437 + (char)0x043D + (char)0x0438 + (char)0x043A + (char)0x043B + (char)0x0438 + (char)0x0020 + (char)0x043D + (char)0x0435 + (char)0x043A +
-                                            (char)0x043E + (char)0x0442 + (char)0x043E + (char)0x0440 + (char)0x044B + (char)0x0435 + (char)0x0020 + (char)0x0442 + (char)0x0440 + (char)0x0443 + (char)0x0434 + (char)0x043D + (char)0x043E +
-                                            (char)0x0441 + (char)0x0442 + (char)0x0438 + (char)0x002C + (char)0x0020 + (char)0x043F + (char)0x0440 + (char)0x043E + (char)0x0434 + (char)0x043E + (char)0x043B + (char)0x0436 + (char)0x0438 +
-                                            (char)0x0442 + (char)0x044C + (char)0x003F));
+                            SetScene(GetMsg(GetTextFormatted(msg[0xFF], (string.Empty + char.MinValue).ToCharArray())));
                             return;
                     }
                 case "Поиск":
@@ -272,16 +251,6 @@ namespace REGOVID
                     switch (Handler((byte)ops.Action.Удалить, out sheet, null, senders.Slf, senders.BirthYear, senders.HomeAddr, senders.Company, senders.Occupation, senders.NameVaccine, senders.Serial, senders.NumbAppoint, senders.DateActual, senders.DatePlan))
                     {
                         case true:
-                            var tabWarn = new char[0x23] { (char)0x0417, (char)0x0430, (char)0x043F, (char)0x0438, (char)0x0441, (char)0x044C, (char)0x0020, (char)0x0443, (char)0x0441, (char)0x043F, (char)0x0435, (char)0x0448, (char)0x043D,
-                                                           (char)0x043E, (char)0x0020, (char)0x0443, (char)0x0434, (char)0x0430, (char)0x043B, (char)0x0435, (char)0x043D, (char)0x0430, (char)0x002C, (char)0x0020, (char)0x043F, (char)0x0440,
-                                                           (char)0x043E, (char)0x0434, (char)0x043E, (char)0x043B, (char)0x0436, (char)0x0438, (char)0x0442, (char)0x044C, (char)0x003F };
-                            var tabWarnField = new char[0x1E] { (char)0x0423, (char)0x0442, (char)0x043E, (char)0x0447, (char)0x043D, (char)0x0438, (char)0x0442, (char)0x0435, (char)0x0020, (char)0x043A, (char)0x0440, (char)0x0438,
-                                                                (char)0x0442, (char)0x0435, (char)0x0440, (char)0x0438, (char)0x0439, (char)0x002C, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x043E, (char)0x0434, (char)0x043E,
-                                                                (char)0x043B, (char)0x0436, (char)0x0438, (char)0x0442, (char)0x044C, (char)0x003F };
-                            var tabWarnSheet = new char[0x25] { (char)0x041A, (char)0x043E, (char)0x043D, (char)0x043A, (char)0x0440, (char)0x0435, (char)0x0442, (char)0x0438, (char)0x0437, (char)0x0438, (char)0x0440, (char)0x0443,
-                                                                (char)0x0439, (char)0x0442, (char)0x0435, (char)0x0020, (char)0x043A, (char)0x0440, (char)0x0438, (char)0x0442, (char)0x0435, (char)0x0440, (char)0x0438, (char)0x0439,
-                                                                (char)0x002C, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x043E, (char)0x0434, (char)0x043E, (char)0x043B, (char)0x0436, (char)0x0438, (char)0x0442, (char)0x044C,
-                                                                (char)0x003F };
                             var index = byte.MinValue;   // reserved for amount of valid criteria
                             switch (sheet)
                             {
@@ -297,7 +266,7 @@ namespace REGOVID
                                                 {
                                                     case true:
                                                         SetFieldTextsColour((byte)(indField - 0x01), Color.Salmon);   // mark out invalid criteria
-                                                        SetScene(GetMsg(GetTextFormatted(tabWarnField, nil.ToString().ToCharArray())));
+                                                        SetScene(GetMsg(GetTextFormatted(msg[0xFB], (string.Empty + char.MinValue).ToCharArray())));
                                                         return;   // interrupt it once to let apply corrections
                                                 }
                                                 for (var number = store[index].Rows.Count - 0x01; number >= uint.MinValue; number--)   // on init: amount of received rows in current Table - SQL output
@@ -323,14 +292,13 @@ namespace REGOVID
                                         {
                                             for (var indField = name.Field.ФИО; indField <= name.Field.Должность; indField++)
                                                 SetFieldsText((byte)(indField - 0x01), store[index - 0x01].Rows[number][string.Empty + indField]);   // display the Table on GUI input fields
-                                            switch (GetMsg(string.Empty + (char)0x0423 + (char)0x0434 + (char)0x0430 + (char)0x043B + (char)0x0438 + (char)0x0442 + (char)0x044C + (char)0x0020 + (char)0x0437 + (char)0x0430 + (char)0x043F +
-                                                           (char)0x0438 + (char)0x0441 + (char)0x044C + (char)0x0020 + (char)0x043F + (char)0x0430 + (char)0x0446 + (char)0x0438 + (char)0x0435 + (char)0x043D + (char)0x0442 + (char)0x0430 + (char)0x003F) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
+                                            switch (GetMsg(GetTextFormatted(msg[0xF3], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
                                             {
                                                 case true:
                                                     reg.Record.UN = store[index - 0x01].Rows[number][string.Empty + name.Field.IDN];
                                                     ExecSQLPlural(string.Empty + senders[ops.Action.Удалить, patient]);
                                                     CLS();   // display the action - "Удалить" on GUI
-                                                    SetScene(GetMsg(GetTextFormatted(tabWarn, nil.ToString().ToCharArray())), senders);
+                                                    SetScene(GetMsg(GetTextFormatted(msg[0x04], (string.Empty + char.MinValue).ToCharArray())), senders);
                                                     return;
                                             }
                                         }
@@ -348,7 +316,7 @@ namespace REGOVID
                                                 {
                                                     case true:
                                                         SetFieldTextsColour((byte)(indField - 0x01), Color.Salmon);   // mark out invalid criteria
-                                                        SetScene(GetMsg(GetTextFormatted(tabWarnField, nil.ToString().ToCharArray())));
+                                                        SetScene(GetMsg(GetTextFormatted(msg[0xFB], (string.Empty + char.MinValue).ToCharArray())));
                                                         return;   // interrupt it once to let apply corrections
                                                 }
                                                 for (var number = store[index].Rows.Count - 0x01; number >= uint.MinValue; number--)   // on init: amount of received rows in current Table - SQL output
@@ -374,16 +342,16 @@ namespace REGOVID
                                         {
                                             for (var indField = name.Field.Наименование; indField <= name.Field.ПлановаяДата; indField++)
                                                 SetFieldsText((byte)(indField - 0x01), store[index - 0x01].Rows[number][string.Empty + indField]);   // display the Table on GUI input fields
-                                            switch (GetMsg(string.Empty + (char)0x0423 + (char)0x0434 + (char)0x0430 + (char)0x043B + (char)0x0438 + (char)0x0442 + (char)0x044C + (char)0x0020 + (char)0x0437 + (char)0x0430 + (char)0x043F +
-                                                           (char)0x0438 + (char)0x0441 + (char)0x044C + (char)0x0020 + (char)0x0432 + (char)0x0430 + (char)0x043A + (char)0x0446 + (char)0x0438 + (char)0x043D + (char)0x044B + (char)0x003F) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
+                                            switch (GetMsg(GetTextFormatted(msg[0xF1], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
                                             {
                                                 case true:
                                                     ExecSQLPlural(((iops.IRecord)new reg.Tab.Vaccine(store[index - 0x01].Rows[number][string.Empty + name.Field.UNN], label3.Text)).Delete);
                                                     CLS();   // display the action - "Удалить" on GUI
-                                                    SetScene(GetMsg(GetTextFormatted(tabWarn, nil.ToString().ToCharArray())), senders);
+                                                    SetScene(GetMsg(GetTextFormatted(msg[0x04], (string.Empty + char.MinValue).ToCharArray())), senders);
                                                     return;
                                             }
                                         }
+                                    SetScene(string.Empty, senders);
                                     break;
                                 default:   // the complete record that belongs to single unique value by any criterion(GUI input field)
                                     store = new DataTable[0x01];   // on instantiation: the size of one criterion that consists of GUI input fields
@@ -401,14 +369,14 @@ namespace REGOVID
                                                         {
                                                             case true:   // there is no such criterion, literally
                                                                 SetFieldTextsColour((byte)(indField - 0x01), Color.Salmon);   // mark out invalid criterion
-                                                                SetScene(GetMsg(GetTextFormatted(tabWarnField, nil.ToString().ToCharArray())));
+                                                                SetScene(GetMsg(GetTextFormatted(msg[0xFB], (string.Empty + char.MinValue).ToCharArray())));
                                                                 return;   // interrupt it once to let apply corrections
                                                         }
                                                         switch (ExecSQLtoSet(((iops.IField)new reg.Tab.Patient(objField.Rows[byte.MinValue][string.Empty + name.Field.IDN])).FindByUN).Rows.Count == uint.MinValue)
                                                         {
                                                             case true:   // there is no relationship with Вакцина, just
                                                                 SetFieldTextsColour((byte)(indField - 0x01), Color.Silver);   // mark out inconsistent criterion
-                                                                SetScene(GetMsg(GetTextFormatted(tabWarnSheet, nil.ToString().ToCharArray())));
+                                                                SetScene(GetMsg(GetTextFormatted(msg[0xF9], (string.Empty + char.MinValue).ToCharArray())));
                                                                 return;   // interrupt it once to let specify criterion
                                                         }
                                                         continue;
@@ -422,14 +390,14 @@ namespace REGOVID
                                                         {
                                                             case true:   // there is no such criterion, literally
                                                                 SetFieldTextsColour((byte)(indField - 0x01), Color.Salmon);   // mark out invalid criterion
-                                                                SetScene(GetMsg(GetTextFormatted(tabWarnField, nil.ToString().ToCharArray())));
+                                                                SetScene(GetMsg(GetTextFormatted(msg[0xFB], (string.Empty + char.MinValue).ToCharArray())));
                                                                 return;   // interrupt it once to let apply corrections
                                                         }
                                                         switch (ExecSQLtoSet(((iops.IField)new reg.Tab.Vaccine(objField.Rows[byte.MinValue][string.Empty + name.Field.UNN], string.Empty)).FindByUN).Rows.Count == uint.MinValue)
                                                         {
                                                             case true:   // there is no relationship with Пациент, just
                                                                 SetFieldTextsColour((byte)(indField - 0x01), Color.Silver);   // mark out inconsistent criterion
-                                                                SetScene(GetMsg(GetTextFormatted(tabWarnSheet, nil.ToString().ToCharArray())));
+                                                                SetScene(GetMsg(GetTextFormatted(msg[0xF9], (string.Empty + char.MinValue).ToCharArray())));
                                                                 return;   // interrupt it once to let specify criterion
                                                         }
                                                         continue;
@@ -446,17 +414,14 @@ namespace REGOVID
                                         listUN += string.Empty + store[index].Rows[number][string.Empty + name.Field.IDN] + (char)0x0020;   // gather new unique values
                                         dataGridView1.DataSource = ExecSQLtoSet(((iops.IField)new reg.Tab.Patient(store[index].Rows[number][string.Empty + name.Field.IDN])).FindByUN);   // SQL result
                                         SetGUI(default, default);   // display the SQL result
-                                        switch (GetMsg(string.Empty + (char)0x0423 + (char)0x0434 + (char)0x0430 + (char)0x043B + (char)0x0438 + (char)0x0442 + (char)0x044C + (char)0x0020 + (char)0x043F + (char)0x0430 + (char)0x0446 +
-                                                       (char)0x0438 + (char)0x0435 + (char)0x043D + (char)0x0442 + (char)0x0430 + (char)0x0020 + (char)0x0438 + (char)0x0020 + (char)0x0435 + (char)0x0433 + (char)0x043E + (char)0x0020 +
-                                                       (char)0x0434 + (char)0x0430 + (char)0x043D + (char)0x043D + (char)0x044B + (char)0x0435 + (char)0x0020 + (char)0x043F + (char)0x0440 + (char)0x0438 + (char)0x0432 + (char)0x0438 +
-                                                       (char)0x0432 + (char)0x043E + (char)0x043A + (char)0x003F) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
+                                        switch (GetMsg(GetTextFormatted(msg[0xEF], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
                                         {
                                             case true:
                                                 reg.Record.UN = store[index].Rows[number][string.Empty + name.Field.IDN];   // supposes that IDN matches UNN as a complete record
                                                 ExecSQLPlural(string.Empty + senders[ops.Action.Удалить, patient], string.Empty + senders[ops.Action.Удалить, vaccine]);
                                                 SetGUI(true, ops.Action.Удалить);
                                                 dataGridView1.DataSource = default;
-                                                SetScene(GetMsg(GetTextFormatted(tabWarn, nil.ToString().ToCharArray())));
+                                                SetScene(GetMsg(GetTextFormatted(msg[0x04], (string.Empty + char.MinValue).ToCharArray())));
                                                 return;
                                         }
                                     }
@@ -466,10 +431,7 @@ namespace REGOVID
                             }
                             return;
                         default:
-                            SetScene(GetMsg(string.Empty + (char)0x0412 + (char)0x043E + (char)0x0437 + (char)0x043D + (char)0x0438 + (char)0x043A + (char)0x043B + (char)0x0438 + (char)0x0020 + (char)0x043D + (char)0x0435 + (char)0x043A +
-                                            (char)0x043E + (char)0x0442 + (char)0x043E + (char)0x0440 + (char)0x044B + (char)0x0435 + (char)0x0020 + (char)0x0442 + (char)0x0440 + (char)0x0443 + (char)0x0434 + (char)0x043D + (char)0x043E +
-                                            (char)0x0441 + (char)0x0442 + (char)0x0438 + (char)0x002C + (char)0x0020 + (char)0x043F + (char)0x0440 + (char)0x043E + (char)0x0434 + (char)0x043E + (char)0x043B + (char)0x0436 + (char)0x0438 +
-                                            (char)0x0442 + (char)0x044C + (char)0x003F));
+                            SetScene(GetMsg(GetTextFormatted(msg[0xFF], (string.Empty + char.MinValue).ToCharArray())));
                             return;
                     }
             }
@@ -906,10 +868,7 @@ namespace REGOVID
         }
         private bool Handler(in byte act, out byte onset, in char[] condition, params object[] sender)   // not willing to re-new IWin32Window.Handle method from Control class
         {
-            var tabWarnPatient = new char[0x14] { (char)0x0411, (char)0x0435, (char)0x0437, (char)0x0020, (char)0x0434, (char)0x0430, (char)0x043D, (char)0x043D, (char)0x044B, (char)0x0445, (char)0x0020, (char)0x043F, (char)0x0430,
-                                                  (char)0x0446, (char)0x0438, (char)0x0435, (char)0x043D, (char)0x0442, (char)0x0430, (char)0x003F };
-            var tabWarnVaccine = new char[0x19] { (char)0x0411, (char)0x0435, (char)0x0437, (char)0x0020, (char)0x0438, (char)0x043D, (char)0x0444, (char)0x043E, (char)0x0440, (char)0x043C, (char)0x0430, (char)0x0446, (char)0x0438,
-                                                  (char)0x0438, (char)0x0020, (char)0x043E, (char)0x0020, (char)0x0432, (char)0x0430, (char)0x043A, (char)0x0446, (char)0x0438, (char)0x043D, (char)0x0435, (char)0x003F };
+            var msg = new inf.Message();
             var summary = new byte[0x03]
             {
                 default,   // reserved for range of GUI input fields
@@ -928,7 +887,7 @@ namespace REGOVID
                             switch (summary[0x01] > summary[0x02])   // concerning Пациент
                             {
                                 case true:
-                                    switch (GetMsg(GetTextFormatted(tabWarnVaccine, nil.ToString().ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
+                                    switch (GetMsg(GetTextFormatted(msg[0xF5], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
                                     {
                                         case true:
                                             return ConfineFields(onset = (byte)name.Field.ФИО - 0x01, (byte)name.Field.Должность, sender, condition);   // determine GUI input fields within the sheet, in order
@@ -938,7 +897,7 @@ namespace REGOVID
                             switch (summary[0x02] > summary[0x01])   // concerning Вакцина
                             {
                                 case true:
-                                    switch (GetMsg(GetTextFormatted(tabWarnPatient, nil.ToString().ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
+                                    switch (GetMsg(GetTextFormatted(msg[0xF7], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
                                     {
                                         case true:
                                             return ConfineFields(onset = (byte)name.Field.Наименование - 0x01, (byte)name.Field.ПлановаяДата, sender, condition);   // determine GUI input fields within the sheet, in order
@@ -964,7 +923,7 @@ namespace REGOVID
                             switch (summary[0x01] > summary[0x02])   // concerning Пациент
                             {
                                 case true:
-                                    switch (GetMsg(GetTextFormatted(tabWarnVaccine, nil.ToString().ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
+                                    switch (GetMsg(GetTextFormatted(msg[0xF5], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
                                     {
                                         case true:
                                             onset = (byte)name.Field.ФИО - 0x01;
@@ -975,7 +934,7 @@ namespace REGOVID
                             switch (summary[0x02] > summary[0x01])   // concerning Вакцина
                             {
                                 case true:
-                                    switch (GetMsg(GetTextFormatted(tabWarnPatient, nil.ToString().ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
+                                    switch (GetMsg(GetTextFormatted(msg[0xF7], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
                                     {
                                         case true:
                                             onset = (byte)name.Field.Наименование - 0x01;
@@ -993,7 +952,7 @@ namespace REGOVID
                             switch (summary[0x01] > summary[0x02])   // concerning Пациент
                             {
                                 case true:
-                                    switch (GetMsg(GetTextFormatted(tabWarnVaccine, nil.ToString().ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
+                                    switch (GetMsg(GetTextFormatted(msg[0xF5], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
                                     {
                                         case true:
                                             onset = (byte)name.Field.ФИО - 0x01;
@@ -1004,7 +963,7 @@ namespace REGOVID
                             switch (summary[0x02] > summary[0x01])   // concerning Вакцина
                             {
                                 case true:
-                                    switch (GetMsg(GetTextFormatted(tabWarnPatient, nil.ToString().ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
+                                    switch (GetMsg(GetTextFormatted(msg[0xF7], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)
                                     {
                                         case true:
                                             onset = (byte)name.Field.Наименование - 0x01;
@@ -1041,13 +1000,13 @@ namespace REGOVID
         }
         private void textBox1_MouseEnter(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagSlf, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagSlf, (string.Empty + char.MinValue).ToCharArray());
         }
         private void textBox1_Enter(object sender, EventArgs e)
         {
             SetFieldsColour(default, SystemColors.Window);
             SetFieldTextsColour(default, SystemColors.WindowText);
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagSlf, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagSlf, (string.Empty + char.MinValue).ToCharArray());
         }
         private void textBox1_Leave(object sender, EventArgs e)
         {
@@ -1057,13 +1016,13 @@ namespace REGOVID
                 case true:
                     return;
             }
-            SetFieldsText(default, GetTextFormatted(text.ToCharArray(), (string.Empty + (char)0x0020 + (char)0x002D).ToString().ToCharArray()));
+            SetFieldsText(default, GetTextFormatted(text.ToCharArray(), (string.Empty + (char)0x0020 + (char)0x002D).ToCharArray()));
         }
         private void dateTimePicker1_Enter(object sender, EventArgs e)
         {
             SetFieldsColour(0x01, SystemColors.Window);
             SetFieldTextsColour(0x01, SystemColors.WindowText);
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagBirthYear, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagBirthYear, (string.Empty + char.MinValue).ToCharArray());
             label1.Visible = default;
         }
         private void dateTimePicker1_Leave(object sender, EventArgs e)
@@ -1077,13 +1036,13 @@ namespace REGOVID
         }
         private void textBox2_MouseEnter(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagHomeAddr, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagHomeAddr, (string.Empty + char.MinValue).ToCharArray());
         }
         private void textBox2_Enter(object sender, EventArgs e)
         {
             SetFieldsColour(0x02, SystemColors.Window);
             SetFieldTextsColour(0x02, SystemColors.WindowText);
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagHomeAddr, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagHomeAddr, (string.Empty + char.MinValue).ToCharArray());
         }
         private void textBox2_Leave(object sender, EventArgs e)
         {
@@ -1096,7 +1055,7 @@ namespace REGOVID
                         case true:
                             return;
                     }
-                    SetFieldsText(0x02, GetTextFormatted(text.ToCharArray(), ((char)0x0020).ToString().ToCharArray()));
+                    SetFieldsText(0x02, GetTextFormatted(text.ToCharArray(), (string.Empty + (char)0x0020).ToCharArray()));
                     return;
             }
         }
@@ -1106,13 +1065,13 @@ namespace REGOVID
         }
         private void textBox3_MouseEnter(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagCompany, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagCompany, (string.Empty + char.MinValue).ToCharArray());
         }
         private void textBox3_Enter(object sender, EventArgs e)
         {
             SetFieldsColour(0x03, SystemColors.Window);
             SetFieldTextsColour(0x03, SystemColors.WindowText);
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagCompany, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagCompany, (string.Empty + char.MinValue).ToCharArray());
         }
         private void textBox3_Leave(object sender, EventArgs e)
         {
@@ -1125,7 +1084,7 @@ namespace REGOVID
                         case true:
                             return;
                     }
-                    SetFieldsText(0x03, GetTextFormatted(text.ToCharArray(), ((char)0x0020).ToString().ToCharArray()));
+                    SetFieldsText(0x03, GetTextFormatted(text.ToCharArray(), (string.Empty + (char)0x0020).ToCharArray()));
                     return;
             }
         }
@@ -1135,13 +1094,13 @@ namespace REGOVID
         }
         private void textBox4_MouseEnter(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagOccupation, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagOccupation, (string.Empty + char.MinValue).ToCharArray());
         }
         private void textBox4_Enter(object sender, EventArgs e)
         {
             SetFieldsColour(0x04, SystemColors.Window);
             SetFieldTextsColour(0x04, SystemColors.WindowText);
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagOccupation, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagOccupation, (string.Empty + char.MinValue).ToCharArray());
         }
         private void textBox4_Leave(object sender, EventArgs e)
         {
@@ -1154,7 +1113,7 @@ namespace REGOVID
                         case true:
                             return;
                     }
-                    SetFieldsText(0x04, GetTextFormatted(text.ToCharArray(), ((char)0x002D).ToString().ToCharArray()));
+                    SetFieldsText(0x04, GetTextFormatted(text.ToCharArray(), (string.Empty + (char)0x002D).ToCharArray()));
                     return;
             }
             switch (button1.Text == string.Empty + ops.Action.Изменить)
@@ -1166,7 +1125,7 @@ namespace REGOVID
                         case true:
                             return;
                     }
-                    SetFieldsText(0x04, GetTextFormatted(text.ToCharArray(), ((char)0x0020).ToString().ToCharArray()));
+                    SetFieldsText(0x04, GetTextFormatted(text.ToCharArray(), (string.Empty + (char)0x0020).ToCharArray()));
                     return;
             }
         }
@@ -1176,13 +1135,13 @@ namespace REGOVID
         }
         private void textBox5_MouseEnter(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagName, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagName, (string.Empty + char.MinValue).ToCharArray());
         }
         private void textBox5_Enter(object sender, EventArgs e)
         {
             SetFieldsColour(0x05, SystemColors.Window);
             SetFieldTextsColour(0x05, SystemColors.WindowText);
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagName, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagName, (string.Empty + char.MinValue).ToCharArray());
         }
         private void textBox5_Leave(object sender, EventArgs e)
         {
@@ -1195,7 +1154,7 @@ namespace REGOVID
                         case true:
                             return;
                     }
-                    SetFieldsText(0x05, GetTextFormatted(text.ToCharArray(), ((char)0x0020).ToString().ToCharArray()));
+                    SetFieldsText(0x05, GetTextFormatted(text.ToCharArray(), (string.Empty + (char)0x0020).ToCharArray()));
                     return;
             }
         }
@@ -1205,13 +1164,13 @@ namespace REGOVID
         }
         private void textBox6_MouseEnter(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagSerial, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagSerial, (string.Empty + char.MinValue).ToCharArray());
         }
         private void textBox6_Enter(object sender, EventArgs e)
         {
             SetFieldsColour(0x06, SystemColors.Window);
             SetFieldTextsColour(0x06, SystemColors.WindowText);
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagSerial, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagSerial, (string.Empty + char.MinValue).ToCharArray());
         }
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
@@ -1221,7 +1180,7 @@ namespace REGOVID
         }
         private void comboBox1_Enter(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagNumbAppoint, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagNumbAppoint, (string.Empty + char.MinValue).ToCharArray());
             label2.Visible = default;
         }
         private void comboBox1_Leave(object sender, EventArgs e)
@@ -1256,7 +1215,7 @@ namespace REGOVID
         }
         private void dateTimePicker2_Enter(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagDateActual, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagDateActual, (string.Empty + char.MinValue).ToCharArray());
             switch (button1.Text == string.Empty + ops.Action.Записать)
             {
                 case true:
@@ -1308,7 +1267,7 @@ namespace REGOVID
         }
         private void dateTimePicker3_Enter(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagDatePlan, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagDatePlan, (string.Empty + char.MinValue).ToCharArray());
             switch (button1.Text == string.Empty + ops.Action.Записать)
             {
                 case true:
@@ -1342,19 +1301,19 @@ namespace REGOVID
         }
         private void label1_MouseEnter(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagBirthYear, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Patient.tagBirthYear, (string.Empty + char.MinValue).ToCharArray());
         }
         private void label2_MouseEnter(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagNumbAppoint, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagNumbAppoint, (string.Empty + char.MinValue).ToCharArray());
         }
         private void label3_MouseEnter(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagDateActual, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagDateActual, (string.Empty + char.MinValue).ToCharArray());
         }
         private void label4_MouseEnter(object sender, EventArgs e)
         {
-            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagDatePlan, nil.ToString().ToCharArray());
+            toolStripStatusLabel1.Text = GetTextFormatted(reg.Tab.Vaccine.tagDatePlan, (string.Empty + char.MinValue).ToCharArray());
         }
     }
 }
