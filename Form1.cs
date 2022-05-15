@@ -89,68 +89,96 @@ namespace REGOVID
                     switch (Handler((byte)ops.Action.Записать, out byte sheet, condition, senders.Slf, senders.BirthYear, senders.HomeAddr, senders.Company, senders.Occupation, senders.NameVaccine, senders.Serial, senders.NumbAppoint, senders.DateActual, senders.DatePlan))
                     {
                         case true:
+                            var nxtIDN = ExecSQLSingle(patient.GetNext);   // increase MAX(IDN) by one
+                            var nxtUNN = ExecSQLSingle(vaccine.GetNext);   // increase MAX(UNN) by one
                             switch (sheet)
                             {
                                 case 0x00:   // concerning Пациент
-                                    ExecSQLtoSet(patient.GetNotExisted, out Queue container);
-                                    switch (string.IsNullOrEmpty(string.Empty + container.Peek()))
+                                    ExecSQLtoSet(patient.GetNotExisted, out Queue container);   // stay advised that from this point the "Формат ячеек" of cell should be "Числовой" in Excel
+                                    switch (container.Count == default)
                                     {
-                                        case true:   // IDN has nothing(UNN column is empty) to compare with
-                                            reg.Record.UN = ExecSQLSingle(patient.GetNext);   // increase MAX(IDN) by one
+                                        case true:
+                                            reg.Record.UN = nxtIDN;
                                             break;
-                                        default:
-                                            SetGUI(default, default);   // prepare for chance to output SQL result
-                                            for (var IDN = ExecSQLSingle(patient.GetNext); container.Count > uint.MinValue;)   // on init: increase MAX(IDN) by one
+                                        default:   // there are some unpaired UNNs
+                                            switch (string.IsNullOrEmpty(string.Empty + container.Peek()))
                                             {
-                                                reg.Record.UN = container.Dequeue();   // take one off
-                                                dataGridView1.DataSource = ExecSQLtoSet(string.Empty + vaccine[(name.Field)0xFE, ops.Action.Поиск]).DefaultView;   // SQL result
-                                                switch (GetMsg(GetTextFormatted(msg[0xEB], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)   // suggest unpaired IDN to connect with UNN
-                                                {
-                                                    case true:
-                                                        container.Clear();   // interrupt the read-next
+                                                case true:   // IDN has nothing(UNN column is empty) to compare with
+                                                    reg.Record.UN = DBNull.Value.Equals(nxtIDN) ? uint.MinValue : GetMax(nxtIDN, uint.MinValue);
+                                                    break;
+                                                default:
+                                                    SetGUI(default, default);   // prepare for chance to output SQL result
+                                                    for (; container.Count > uint.MinValue;)
+                                                    {
+                                                        reg.Record.UN = container.Dequeue();   // take one off
+                                                        dataGridView1.DataSource = ExecSQLtoSet(string.Empty + vaccine[(name.Field)0xFE, ops.Action.Поиск]).DefaultView;   // SQL result
+                                                        switch (GetMsg(GetTextFormatted(msg[0xEB], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)   // suggest unpaired IDN to connect with UNN
+                                                        {
+                                                            case true:
+                                                                container.Clear();   // interrupt the read-next
+                                                                continue;
+                                                        }
+                                                        reg.Record.UN = default;   // mark off a deal with increased MAX(IDN) by one
+                                                    }
+                                                    switch (Equals(reg.Record.UN, default))   // the deal
+                                                    {
+                                                        case true:
+                                                            reg.Record.UN = Convert.ToInt32(GetMax(nxtIDN, uint.MinValue)) == default ? uint.MinValue : GetMax(nxtIDN, reg.Record.UN);
+                                                            reg.Record.UN = Convert.ToUInt32(reg.Record.UN).Equals(Convert.ToUInt32(nxtUNN) - 0x01) ? nxtUNN : reg.Record.UN;   // the increased MAX(IDN) by one should not coincide with missed MAX(UNN)
                                                         break;
-                                                    default:   // initialize the increased IDN
-                                                        reg.Record.UN = byte.MinValue + string.Empty + IDN;   // IDN column might have no numbers. Be advised that from this point the "Формат ячеек" of cell should be "Числовой" in Excel
-                                                        break;
-                                                }
+                                                    }
+                                                    SetGUI(true, ops.Action.Записать);
+                                                    dataGridView1.DataSource = default;
+                                                    break;
                                             }
-                                            SetGUI(true, ops.Action.Записать);
-                                            dataGridView1.DataSource = default;
                                             break;
                                     }
                                     ExecSQLPlural(string.Empty + senders[ops.Action.Записать, patient]);
                                     break;
                                 case 0x05:   // concerning Вакцина
-                                    ExecSQLtoSet(vaccine.GetNotExisted, out container);
-                                    switch (string.IsNullOrEmpty(string.Empty + container.Peek()))
+                                    ExecSQLtoSet(vaccine.GetNotExisted, out container);   // stay advised that from this point the "Формат ячеек" of cell should be "Числовой" in Excel
+                                    switch (container.Count == default)
                                     {
-                                        case true:   // UNN has nothing(IDN column is empty) to compare with
-                                            reg.Record.UN = ExecSQLSingle(vaccine.GetNext);   // increase MAX(UNN) by one
+                                        case true:
+                                            reg.Record.UN = nxtUNN;
                                             break;
-                                        default:
-                                            SetGUI(default, default);   // prepare for chance to output SQL result
-                                            for (var UNN = ExecSQLSingle(vaccine.GetNext); container.Count > uint.MinValue;)   // on init: increase MAX(UNN) by one
+                                        default:   // there are some unpaired IDNs
+                                            switch (string.IsNullOrEmpty(string.Empty + container.Peek()))
                                             {
-                                                reg.Record.UN = container.Dequeue();   // take one off
-                                                dataGridView1.DataSource = ExecSQLtoSet(string.Empty + patient[(name.Field)0xFF, ops.Action.Поиск]).DefaultView;   // SQL result
-                                                switch (GetMsg(GetTextFormatted(msg[0xED], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)   // suggest unpaired UNN to connect with IDN
-                                                {
-                                                    case true:
-                                                        container.Clear();   // interrupt the read-next
+                                                case true:   // UNN has nothing(IDN column is empty) to compare with
+                                                    reg.Record.UN = DBNull.Value.Equals(nxtUNN) ? uint.MinValue : GetMax(uint.MinValue, nxtUNN);
+                                                    break;
+                                                default:
+                                                    SetGUI(default, default);   // prepare for chance to output SQL result
+                                                    for (; container.Count > uint.MinValue;)
+                                                    {
+                                                        reg.Record.UN = container.Dequeue();   // take one off
+                                                        dataGridView1.DataSource = ExecSQLtoSet(string.Empty + patient[(name.Field)0xFF, ops.Action.Поиск]).DefaultView;   // SQL result
+                                                        switch (GetMsg(GetTextFormatted(msg[0xED], (string.Empty + char.MinValue).ToCharArray())) == string.Empty + (char)0x0059 + (char)0x0065 + (char)0x0073)   // suggest unpaired UNN to connect with IDN
+                                                        {
+                                                            case true:
+                                                                container.Clear();   // interrupt the read-next
+                                                                continue;
+                                                        }
+                                                        reg.Record.UN = default;   // mark off a deal with increased MAX(UNN) by one
+                                                    }
+                                                    switch (Equals(reg.Record.UN, default))   // the deal
+                                                    {
+                                                        case true:
+                                                            reg.Record.UN = Convert.ToInt32(GetMax(uint.MinValue, nxtUNN)) == default ? uint.MinValue : GetMax(reg.Record.UN, nxtUNN);
+                                                            reg.Record.UN = Convert.ToUInt32(reg.Record.UN).Equals(Convert.ToUInt32(nxtIDN) - 0x01) ? nxtIDN : reg.Record.UN;   // the increased MAX(UNN) by one should not coincide with missed MAX(IDN)
                                                         break;
-                                                    default:   // initialize the increased UNN
-                                                        reg.Record.UN = byte.MinValue + string.Empty + UNN;   // UNN column might have no numbers. Be advised that from this point the "Формат ячеек" of cell should be "Числовой" in Excel
-                                                        break;
-                                                }
+                                                    }
+                                                    SetGUI(true, ops.Action.Записать);
+                                                    dataGridView1.DataSource = default;
+                                                    break;
                                             }
-                                            SetGUI(true, ops.Action.Записать);
-                                            dataGridView1.DataSource = default;
                                             break;
                                     }
                                     ExecSQLPlural(string.Empty + senders[ops.Action.Записать, vaccine]);
                                     break;
                                 default:
-                                    reg.Record.UN = GetMax(ExecSQLSingle(patient.GetNext), ExecSQLSingle(vaccine.GetNext));   // equate common unique value to the highest one
+                                    reg.Record.UN = DBNull.Value.Equals(nxtIDN) ? GetMax(uint.MinValue, nxtUNN) : GetMax(nxtIDN, uint.MinValue);
                                     ExecSQLPlural(string.Empty + senders[ops.Action.Записать, patient], string.Empty + senders[ops.Action.Записать, vaccine]);
                                     break;
                             }
@@ -165,7 +193,12 @@ namespace REGOVID
                     {
                         case true:
                             for (byte indStart = (byte)name.Field.Год - 0x01, indEnd = (byte)name.Field.ПлановаяДата; indStart < indEnd; indStart++)   // validity-check of inputs in range from Год to ПлановаяДата GUI fields
-                                ConfineFields(senders.ToString(), indStart, condition);   // gather those indices of GUI input fields that are planning to be modified, otherwise ignore input from the range of fields. No system interrupts as consequence
+                                ConfineFields(senders.ToString(), indStart, condition);   // gather those indices of GUI input fields that are planning to be modified
+                            switch (custContainer[default].Length == default)   // less than one valid GUI input field to change
+                            {
+                                case true:
+                                    return;
+                            }
                             custContainer[0x01] = senders.ToString();
                             ExecSQLtoSet(((iops.IField)patient).FindByName, out Queue container);   // seek by input - ФИО, GUI field
                             timer1.Tick += new EventHandler(SetHint);
@@ -262,7 +295,7 @@ namespace REGOVID
                                         {
                                             case false:
                                                 store[index] = ExecSQLtoSet(string.Empty + patient[indField, ops.Action.Поиск]);   // fetch Пациент record
-                                                switch (store[index].Rows.Count == uint.MinValue)   // exclude non-existent criteria
+                                                switch (store[index].Rows.Count == uint.MinValue)   // exclude nonexistent criteria
                                                 {
                                                     case true:
                                                         SetFieldTextsColour((byte)(indField - 0x01), Color.Salmon);   // mark out invalid criteria
@@ -312,7 +345,7 @@ namespace REGOVID
                                         {
                                             case false:
                                                 store[index] = ExecSQLtoSet(string.Empty + vaccine[indField, ops.Action.Поиск]);   // fetch Вакцина record
-                                                switch (store[index].Rows.Count == uint.MinValue)   // exclude non-existent criteria
+                                                switch (store[index].Rows.Count == uint.MinValue)   // exclude nonexistent criteria
                                                 {
                                                     case true:
                                                         SetFieldTextsColour((byte)(indField - 0x01), Color.Salmon);   // mark out invalid criteria
@@ -357,7 +390,7 @@ namespace REGOVID
                                     store = new DataTable[0x01];   // on instantiation: the size of one criterion that consists of GUI input fields
                                     listUN = string.Empty;   // reserved for enumerating complete records DISTINCT(UN)
                                     store[index] = ExecSQLtoSet(string.Empty + senders[ops.Action.Удалить]);   // fetch complete record
-                                    switch (store[index].Rows.Count == uint.MinValue)   // exclude non-existent criteria
+                                    switch (store[index].Rows.Count == uint.MinValue)   // exclude nonexistent criteria
                                     {
                                         case true:
                                             for (var indField = name.Field.ФИО; indField <= name.Field.Должность; indField++)
@@ -453,12 +486,12 @@ namespace REGOVID
         }
         private object GetMax(in object objA, in object objB)
         {
-            switch (Convert.ToUInt32(objA) >= Convert.ToUInt32(objB))
+            switch (DBNull.Value.Equals(objA) || DBNull.Value.Equals(objB))   // is there uninitialized one
             {
                 case true:
-                    return objA;
+                    return uint.MinValue;
                 default:
-                    return objB;
+                    return (Convert.ToInt32(objA) >= Convert.ToInt32(objB)) ? objA : objB;
             }
         }
         private void FirstScene()
@@ -908,13 +941,13 @@ namespace REGOVID
                     }
                     return default;
                 case 0x02:
-                    switch (summary[default] == default)
+                    switch (summary[default] == default)   // does it equal to less than ФИО GUI input field
                     {
                         case true:
                             SetFieldsColour(default, Color.Salmon);   // useless ConfineFields(onset = (byte)name.Field.ФИО - 0x01, ++summary[default], sender, condition) might be used to optimize the code
                             return default;
                         default:
-                            return ConfineFields(onset = (byte)name.Field.ФИО - 0x01, summary[default], sender, condition);
+                            return ConfineFields(default, summary[default], sender, condition);
                     }
                 case 0x03:
                     switch (sender.Length == onset)   // does it equal to sent GUI input fields
@@ -971,7 +1004,7 @@ namespace REGOVID
                                     }
                                     break;
                             }
-                            return (summary[default] != 0x00) & true;   // do not let GUI input fields be empty at all
+                            return (summary[default] != default) & true;   // do not let GUI input fields be empty at all
                     }
                     return default;
                 default:   // unknown action
