@@ -70,7 +70,7 @@ namespace REGOVID
             var patient = new reg.Tab.Patient(textBox1.Text, label1.Text, textBox2.Text, textBox3.Text, textBox4.Text);
             var vaccine = new reg.Tab.Vaccine(textBox5.Text, textBox6.Text, label2.Text, label3.Text, label4.Text);
             var senders = new reg.Record(patient, vaccine);
-            var condition = new char[(byte)name.Field.ПлановаяДата]   // on instantiation: the size of GUI input fields
+            var condition = new char[0x0A]   // on instantiation: the size of GUI input fields
             {
                 (char)49,   // ФИО
                 (char)48,   // Год
@@ -94,6 +94,12 @@ namespace REGOVID
                             switch (sheet)
                             {
                                 case 0x00:   // concerning Пациент
+                                    switch (Equals(ExecSQLSingle(string.Empty + patient.FindByName), default))
+                                    {
+                                        case false:   // limit duplicate value in ФИО column
+                                            SetScene(GetMsg(GetTextFormatted(msg[0xE7], (string.Empty + char.MinValue).ToCharArray())));
+                                            return;
+                                    }
                                     ExecSQLtoSet(patient.GetNotExisted, out Queue container);   // stay advised that from this point the "Формат ячеек" of cell should be "Числовой" in Excel
                                     switch (container.Count == default)
                                     {
@@ -178,6 +184,12 @@ namespace REGOVID
                                     ExecSQLPlural(string.Empty + senders[ops.Action.Записать, vaccine]);
                                     break;
                                 default:
+                                    switch (Equals(ExecSQLSingle(string.Empty + patient.FindByName), default))
+                                    {
+                                        case false:   // limit duplicate value in ФИО column
+                                            SetScene(GetMsg(GetTextFormatted(msg[0xE7], (string.Empty + char.MinValue).ToCharArray())));
+                                            return;
+                                    }
                                     reg.Record.UN = DBNull.Value.Equals(nxtIDN) ? GetMax(uint.MinValue, nxtUNN) : GetMax(nxtIDN, uint.MinValue);
                                     ExecSQLPlural(string.Empty + senders[ops.Action.Записать, patient], string.Empty + senders[ops.Action.Записать, vaccine]);
                                     break;
@@ -192,7 +204,7 @@ namespace REGOVID
                     switch (Handler((byte)ops.Action.Изменить, out _, condition, senders.Slf))
                     {
                         case true:
-                            for (byte indStart = (byte)name.Field.Год - 0x01, indEnd = (byte)name.Field.ПлановаяДата; indStart < indEnd; indStart++)   // validity-check of inputs in range from Год to ПлановаяДата GUI fields
+                            for (byte indStart = (byte)name.Field.Год - 0x01, indEnd = 0x0A; indStart < indEnd; indStart++)   // validity-check of inputs(ranging from Год to ПлановаяДата) GUI fields
                                 ConfineFields(senders.ToString(), indStart, condition);   // gather those indices of GUI input fields that are planning to be modified
                             switch (custContainer[default].Length == default)   // less than one valid GUI input field to change
                             {
@@ -217,7 +229,7 @@ namespace REGOVID
                                             timer1.Stop();   // cease hinting
                                             timer1.Tick -= new EventHandler(SetHint);
                                             var objSet = new Queue();
-                                            for (var fieldInd = byte.MinValue; fieldInd < (byte)name.Field.ПлановаяДата; fieldInd++)   // on init: counter for GUI index fields
+                                            for (var fieldInd = byte.MinValue; fieldInd < 0x0A; fieldInd++)   // on init: counter of GUI index fields
                                             {
                                                 for (var capacityFieldInd = (byte)(custContainer[default].Split(separator).Length - 0x01); capacityFieldInd > byte.MinValue; capacityFieldInd--)   // on init: amount of wanted GUI index fields
                                                     switch (fieldInd == Convert.ToByte(custContainer[default].Split(separator)[capacityFieldInd - 0x01]))
@@ -910,7 +922,7 @@ namespace REGOVID
             };
             for (var index = byte.MinValue; index < sender.Length; index++)
                 SetFieldsSum(sender, index, ref summary);
-            onset = (byte)name.Field.ПлановаяДата;   // on init: amount of GUI input fields
+            onset = 0x0A;   // on init: default number of all GUI input fields
             switch (act)
             {
                 case 0x01:

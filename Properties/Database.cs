@@ -44,9 +44,9 @@ namespace REGOVID.Properties.Struct.Database.Tab
                 {
                     case "IDN,Поиск":   // instantiate the latest IDN by UN
                         return new Patient(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty).FindByUN;
-                    case "ФИО,Поиск":
-                        return this.FindByName;
                     // useless indexer(this) might be used to handle iteratively(private fields) and to optimize the code
+                    case "ФИО,Поиск":
+                        return $"SELECT [{Field.IDN}],[{Field.ФИО}],[{Field.Год}],[{Field.Адрес}],[{Field.Организация}],[{Field.Должность}] FROM [{Sheet.Пациент}{(char)36}] WHERE [{field}] LIKE '%{slf}%'";
                     case "Год,Поиск":
                         return $"SELECT [{Field.IDN}],[{Field.ФИО}],[{Field.Год}],[{Field.Адрес}],[{Field.Организация}],[{Field.Должность}] FROM [{Sheet.Пациент}{(char)36}] WHERE [{field}] LIKE '%{birthYear}%'";
                     case "Адрес,Поиск":
@@ -63,7 +63,7 @@ namespace REGOVID.Properties.Struct.Database.Tab
         public string FindByUN => $"SELECT [{Field.ФИО}],[{Field.Год}],[{Field.Адрес}],[{Field.Организация}],[{Field.Должность}] FROM [{Sheet.Пациент}{(char)36}] WHERE [{Field.IDN}] LIKE '%{IDN}%'";
         string IField.FindByUN => $"SELECT [{Field.ФИО}],[{Field.Год}],[{Field.Адрес}],[{Field.Организация}],[{Field.Должность}],[{Field.Наименование}],[{Field.СерияПрепарата}],[{Field.Приём}],[{Field.ФактическаяДата}],[{Field.ПлановаяДата}] " +
                                   $"FROM [{Sheet.Пациент}{(char)36}],[{Sheet.Вакцина}{(char)36}] WHERE [{Field.IDN}] LIKE '%{IDN}%' AND [{Field.IDN}]=[{Field.UNN}] ORDER BY [{Field.ФИО}] ASC";
-        public string FindByName => $"SELECT [{Field.IDN}],[{Field.ФИО}],[{Field.Год}],[{Field.Адрес}],[{Field.Организация}],[{Field.Должность}] FROM [{Sheet.Пациент}{(char)36}] WHERE [{Field.ФИО}] LIKE '%{slf}%'";
+        public string FindByName => $"SELECT [{Field.IDN}],[{Field.ФИО}],[{Field.Год}],[{Field.Адрес}],[{Field.Организация}],[{Field.Должность}] FROM [{Sheet.Пациент}{(char)36}] WHERE [{Field.ФИО}]='{slf}'";
         string IField.FindByName => $"SELECT DISTINCT [{Field.IDN}] FROM [{Sheet.Пациент}{(char)36}],[{Sheet.Вакцина}{(char)36}] WHERE [{Field.ФИО}] LIKE '%{slf}%' AND [{Field.IDN}]=[{Field.UNN}]";
         public string GetNotExisted => $"SELECT DISTINCT [{Field.UNN}] FROM [{Sheet.Вакцина}{(char)36}] WHERE NOT EXISTS (SELECT [{Field.IDN}] FROM [{Sheet.Пациент}{(char)36}] WHERE [{Sheet.Вакцина}{(char)36}].[{Field.UNN}]=[{Field.IDN}])";   // gather UNNs which are not in IDN column
         public string GetNext => $"SELECT MAX([{Field.IDN}]) + 1 FROM [{Sheet.Пациент}{(char)36}]";
@@ -282,8 +282,8 @@ namespace REGOVID.Properties.Struct.Database.Info
                                                 (char)0x044B, (char)0x0435, (char)0x0020, (char)0x0442, (char)0x0440, (char)0x0443, (char)0x0434, (char)0x043D, (char)0x043E, (char)0x0441, (char)0x0442, (char)0x0438, (char)0x002C, (char)0x0020, (char)0x043F, (char)0x0440,
                                                 (char)0x043E, (char)0x0434, (char)0x043E, (char)0x043B, (char)0x0436, (char)0x0438, (char)0x0442, (char)0x044C, (char)0x003F };
                     case 0xFD:
-                        return new char[0x1E] { (char)0x041D, (char)0x0438, (char)0x0447, (char)0x0435, (char)0x0433, (char)0x043E, (char)0x0020, (char)0x043D, (char)0x0435, (char)0x0020, (char)0x043D, (char)0x0430, (char)0x0439, (char)0x0434, (char)0x0435, (char)0x043D,
-                                                (char)0x043E, (char)0x002C, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x043E, (char)0x0434, (char)0x043E, (char)0x043B, (char)0x0436, (char)0x0438, (char)0x0442, (char)0x044C, (char)0x003F };
+                        return new char[0x1A] { (char)0x041D, (char)0x0435, (char)0x0442, (char)0x0020, (char)0x0438, (char)0x0437, (char)0x043C, (char)0x0435, (char)0x043D, (char)0x0435, (char)0x043D, (char)0x0438, (char)0x0439, (char)0x002C, (char)0x0020, (char)0x043F,
+                                                (char)0x0440, (char)0x043E, (char)0x0434, (char)0x043E, (char)0x043B, (char)0x0436, (char)0x0438, (char)0x0442, (char)0x044C, (char)0x003F };
                     case 0xFB:
                         return new char[0x1E] { (char)0x0423, (char)0x0442, (char)0x043E, (char)0x0447, (char)0x043D, (char)0x0438, (char)0x0442, (char)0x0435, (char)0x0020, (char)0x043A, (char)0x0440, (char)0x0438, (char)0x0442, (char)0x0435, (char)0x0440, (char)0x0438,
                                                 (char)0x0439, (char)0x002C, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x043E, (char)0x0434, (char)0x043E, (char)0x043B, (char)0x0436, (char)0x0438, (char)0x0442, (char)0x044C, (char)0x003F };
@@ -317,6 +317,10 @@ namespace REGOVID.Properties.Struct.Database.Info
                     case 0xE9:
                         return new char[0x18] { (char)0x041F, (char)0x0440, (char)0x0438, (char)0x043C, (char)0x0435, (char)0x043D, (char)0x0438, (char)0x0442, (char)0x044C, (char)0x0020, (char)0x044D, (char)0x0442, (char)0x043E, (char)0x0020, (char)0x0438, (char)0x0437,
                                                 (char)0x043C, (char)0x0435, (char)0x043D, (char)0x0435, (char)0x043D, (char)0x0438, (char)0x0435, (char)0x003F };
+                    case 0xE7:
+                        return new char[0x2E] { (char)0x0417, (char)0x0430, (char)0x043F, (char)0x0438, (char)0x0441, (char)0x044C, (char)0x0020, (char)0x0441, (char)0x0020, (char)0x0442, (char)0x0430, (char)0x043A, (char)0x0438, (char)0x043C, (char)0x0020, (char)0x0424,
+                                                (char)0x0418, (char)0x041E, (char)0x0020, (char)0x0443, (char)0x0436, (char)0x0435, (char)0x0020, (char)0x0441, (char)0x0443, (char)0x0449, (char)0x0435, (char)0x0441, (char)0x0442, (char)0x0432, (char)0x0443, (char)0x0435,
+                                                (char)0x0442, (char)0x002C, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x043E, (char)0x0434, (char)0x043E, (char)0x043B, (char)0x0436, (char)0x0438, (char)0x0442, (char)0x044C, (char)0x003F };
                     case 0x04:
                         return new char[0x23] { (char)0x0417, (char)0x0430, (char)0x043F, (char)0x0438, (char)0x0441, (char)0x044C, (char)0x0020, (char)0x0443, (char)0x0441, (char)0x043F, (char)0x0435, (char)0x0448, (char)0x043D, (char)0x043E, (char)0x0020, (char)0x0443,
                                                 (char)0x0434, (char)0x0430, (char)0x043B, (char)0x0435, (char)0x043D, (char)0x0430, (char)0x002C, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x043E, (char)0x0434, (char)0x043E, (char)0x043B, (char)0x0436, (char)0x0438,
