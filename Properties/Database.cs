@@ -98,7 +98,7 @@ namespace REGOVID.Properties.Struct.Database.Tab
         private readonly string name;
         private readonly string serial;
         private readonly string numbAppoint;
-        private readonly string dateActual;
+        private readonly string dateActual;   // reserved for additional uniqueness(right after UNN)
         private readonly string datePlan;
         public static readonly char[] tagName = new char[0x16] { (char)0x041D, (char)0x0430, (char)0x0438, (char)0x043C, (char)0x0435, (char)0x043D, (char)0x043E, (char)0x0432, (char)0x0430, (char)0x043D, (char)0x0438, (char)0x0435, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x0435, (char)0x043F, (char)0x0430, (char)0x0440, (char)0x0430, (char)0x0442, (char)0x0430 };
         public static readonly char[] tagSerial = new char[0x0F] { (char)0x0421, (char)0x0435, (char)0x0440, (char)0x0438, (char)0x044F, (char)0x0020, (char)0x043F, (char)0x0440, (char)0x0435, (char)0x043F, (char)0x0430, (char)0x0440, (char)0x0430, (char)0x0442, (char)0x0430 };

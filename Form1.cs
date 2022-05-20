@@ -20,7 +20,7 @@ namespace REGOVID
         private readonly string dtBase;
         private readonly string[] custContainer;
         private const char separator = (char)59;   // divides customized container into human-readable view that is consisting of GUI input fields
-        private delegate void Action(in byte index, in object sender);
+        private delegate void Action(in byte index, in object sender);   // named due to the ops namespace
         private readonly Action hint;
         private bool snap;   // reserved for resetting flashing colours
         public Form1()
@@ -1023,25 +1023,66 @@ namespace REGOVID
                     return default;
             }
         }
-        private bool GetKBRDSet(in KeyPressEventArgs e, params char[] sender)
+        private void SetKBRDLayout(object sender, KeyPressEventArgs e)
         {
             switch (sender)
             {
-                case var _ when sender.Length == default && !char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar):
-                    return true;
-                case var _ when sender.Length == 0x01 && !char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar) && e.KeyChar != sender[default]:
-                    return true;
-                case var _ when sender.Length == 0x02 && !char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar) && e.KeyChar != sender[default]:   // reserved for GUI input field - Наименование
-                    return true;
-                case var _ when sender.Length == 0x03 && !char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar) && e.KeyChar != sender[default] && e.KeyChar != sender[0x01] && e.KeyChar != sender[0x02]:
-                    return true;
+                case 0x01:
+                    _ = (e.KeyChar != (char)45 && !char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar)) ? e.Handled = true : e.Handled = default;
+                    return;
+                case 0x02:
+                    switch (e.KeyChar == (char)68 || e.KeyChar == (char)100 || e.KeyChar == (char)1042 || e.KeyChar == (char)1074)   // allow either latin or cyrillic (character key - C03) from ISO/IEC 9995-3
+                    {
+                        case true:   // then embed removal mechanism
+                            label1.Text = string.Empty;
+                            label1.Visible = true;
+                            break;
+                    }
+                    e.Handled = true;
+                    return;
+                case 0x03:
+                    _ = (e.KeyChar != (char)45 && e.KeyChar != (char)46 && e.KeyChar != (char)47 && !char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar)) ? e.Handled = true : e.Handled = default;
+                    return;
+                case 0x04:
+                    _ = (e.KeyChar != (char)45 && e.KeyChar != (char)46 && e.KeyChar != (char)47 && !char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar)) ? e.Handled = true : e.Handled = default;
+                    return;
+                case 0x05:
+                    _ = (e.KeyChar != (char)45 && !char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar)) ? e.Handled = true : e.Handled = default;
+                    return;
+                case 0x06:
+                    _ = (e.KeyChar != (char)45 && !char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar)) ? e.Handled = true : e.Handled = default;
+                    return;
+                case 0x07:
+                    _ = (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) ? e.Handled = true : e.Handled = default;
+                    return;
+                case 0x09:
+                    switch (e.KeyChar == (char)68 || e.KeyChar == (char)100 || e.KeyChar == (char)1042 || e.KeyChar == (char)1074)   // allow either latin or cyrillic (character key - C03) from ISO/IEC 9995-3
+                    {
+                        case true:   // then embed removal mechanism
+                            label3.Text = string.Empty;
+                            label3.Visible = true;
+                            break;
+                    }
+                    e.Handled = true;
+                    return;
+                case 0x0A:
+                    switch (e.KeyChar == (char)68 || e.KeyChar == (char)100 || e.KeyChar == (char)1042 || e.KeyChar == (char)1074)   // allow either latin or cyrillic (character key - C03) from ISO/IEC 9995-3
+                    {
+                        case true:   // then embed removal mechanism
+                            label4.Text = string.Empty;
+                            label4.Visible = true;
+                            break;
+                    }
+                    e.Handled = true;
+                    return;
                 default:
-                    return default;
+                    e.Handled = default;
+                    return;
             }
         }
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = GetKBRDSet(e, (char)45);
+            SetKBRDLayout(0x01, e);
         }
         private void textBox1_MouseEnter(object sender, EventArgs e)
         {
@@ -1063,6 +1104,10 @@ namespace REGOVID
             }
             SetFieldsText(default, GetTextFormatted(text.ToCharArray(), (string.Empty + (char)0x0020 + (char)0x002D).ToCharArray()));
         }
+        private void dateTimePicker1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            SetKBRDLayout(0x02, e);
+        }
         private void dateTimePicker1_Enter(object sender, EventArgs e)
         {
             SetFieldsColour(0x01, SystemColors.Window);
@@ -1072,12 +1117,22 @@ namespace REGOVID
         }
         private void dateTimePicker1_Leave(object sender, EventArgs e)
         {
+            switch (button1.Text == string.Empty + ops.Action.Удалить)
+            {
+                case true:
+                    switch (label1.Visible && label1.Text == string.Empty)   //  was the removal mechanism applied
+                    {
+                        case true:
+                            return;
+                    }
+                    break;
+            }
             label1.Text = $"{dateTimePicker1.Value.Year}";
             label1.Visible = true;
         }
         private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = GetKBRDSet(e, (char)45, (char)47, (char)46);
+            SetKBRDLayout(0x03, e);
         }
         private void textBox2_MouseEnter(object sender, EventArgs e)
         {
@@ -1106,7 +1161,7 @@ namespace REGOVID
         }
         private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = GetKBRDSet(e, (char)45, (char)47, (char)46);
+            SetKBRDLayout(0x04, e);
         }
         private void textBox3_MouseEnter(object sender, EventArgs e)
         {
@@ -1135,7 +1190,7 @@ namespace REGOVID
         }
         private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = GetKBRDSet(e, (char)45);
+            SetKBRDLayout(0x05, e);
         }
         private void textBox4_MouseEnter(object sender, EventArgs e)
         {
@@ -1176,7 +1231,7 @@ namespace REGOVID
         }
         private void textBox5_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = GetKBRDSet(e, (char)45, (char)45);
+            SetKBRDLayout(0x06, e);
         }
         private void textBox5_MouseEnter(object sender, EventArgs e)
         {
@@ -1205,7 +1260,7 @@ namespace REGOVID
         }
         private void textBox6_KeyPress(object sender, KeyPressEventArgs e)
         {
-            e.Handled = GetKBRDSet(e);
+            SetKBRDLayout(0x07, e);
         }
         private void textBox6_MouseEnter(object sender, EventArgs e)
         {
@@ -1251,12 +1306,15 @@ namespace REGOVID
                                     label4.Text = label3.Text;
                                     return;
                                 default:
-                                    byte tmp = 0x15;   // on init: days after which are planned to repeat again
-                                    label4.Text = Convert.ToDateTime($"{dateTimePicker2.Value.AddDays(tmp).Day}.{dateTimePicker2.Value.AddDays(tmp).Month}.{dateTimePicker2.Value.AddDays(tmp).Year}").ToString().Substring(0x00, 0x0A);   // keep leading zeros in front of day/month
+                                    label4.Text = dateTimePicker2.Value.AddDays(0x15).ToShortDateString();   // days after which are planned to repeat again
                                     return;
                             }
                     }
             }
+        }
+        private void dateTimePicker2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            SetKBRDLayout(0x09, e);
         }
         private void dateTimePicker2_Enter(object sender, EventArgs e)
         {
@@ -1284,6 +1342,16 @@ namespace REGOVID
         {
             SetFieldsColour(0x08, SystemColors.Window);
             SetFieldTextsColour(0x08, SystemColors.WindowText);
+            switch (button1.Text == string.Empty + ops.Action.Удалить)
+            {
+                case true:
+                    switch (label3.Visible && label3.Text == string.Empty)   //  was the removal mechanism applied
+                    {
+                        case true:
+                            return;
+                    }
+                    break;
+            }
             label3.Text = dateTimePicker2.Text;
             label3.Visible = true;
             switch (button1.Text == string.Empty + ops.Action.Записать)
@@ -1298,17 +1366,20 @@ namespace REGOVID
                             label4.Text = dateTimePicker2.Text;
                             return;
                         default:
-                            byte tmp = 0x15;   // on init: days after which are planned to repeat again
-                            label4.Text = Convert.ToDateTime($"{dateTimePicker2.Value.AddDays(tmp).Day}.{dateTimePicker2.Value.AddDays(tmp).Month}.{dateTimePicker2.Value.AddDays(tmp).Year}").ToString().Substring(0x00, 0x0A);   // keep leading zeros in front of day/month
+                            label4.Text = dateTimePicker2.Value.AddDays(0x15).ToShortDateString();   // days after which are planned to repeat again
                             return;
                     }
             }
             switch (button1.Text == string.Empty + ops.Action.Изменить)
             {
                 case true:
-                    label3.Text = string.Empty;   // reserved for additional uniqueness(right after UNN)
+                    label3.Text = string.Empty;
                     return;
             }
+        }
+        private void dateTimePicker3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            SetKBRDLayout(0x0A, e);
         }
         private void dateTimePicker3_Enter(object sender, EventArgs e)
         {
@@ -1325,8 +1396,7 @@ namespace REGOVID
                             label4.Text = label3.Text;
                             return;
                         default:
-                            byte tmp = 0x15;   // on init: days after which are planned to repeat again
-                            label4.Text = Convert.ToDateTime($"{dateTimePicker2.Value.AddDays(tmp).Day}.{dateTimePicker2.Value.AddDays(tmp).Month}.{dateTimePicker2.Value.AddDays(tmp).Year}").ToString().Substring(0x00, 0x0A);   // keep leading zeros in front of day/month
+                            label4.Text = dateTimePicker2.Value.AddDays(0x15).ToShortDateString();   // days after which are planned to repeat again
                             return;
                     }
             }
@@ -1340,6 +1410,16 @@ namespace REGOVID
             {
                 case true:
                     return;
+            }
+            switch (button1.Text == string.Empty + ops.Action.Удалить)
+            {
+                case true:
+                    switch (label4.Visible && label4.Text == string.Empty)   // was the removal mechanism applied
+                    {
+                        case true:
+                            return;
+                    }
+                    break;
             }
             label4.Text = dateTimePicker3.Text;
             label4.Visible = true;

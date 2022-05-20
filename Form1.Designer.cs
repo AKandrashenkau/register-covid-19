@@ -77,7 +77,7 @@ namespace REGOVID
             this.dataGridView1.EnableHeadersVisualStyles = false;
             this.dataGridView1.GridColor = System.Drawing.SystemColors.Control;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
@@ -92,7 +92,7 @@ namespace REGOVID
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.ShowCellErrors = false;
             this.dataGridView1.ShowRowErrors = false;
-            this.dataGridView1.Size = new System.Drawing.Size(768, 488);
+            this.dataGridView1.Size = new System.Drawing.Size(1024, 601);
             this.dataGridView1.TabIndex = 98;
             this.dataGridView1.TabStop = false;
             // 
@@ -105,14 +105,14 @@ namespace REGOVID
             this.найтиToolStripMenuItem,
             this.удалитьToolStripMenuItem1});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(174, 108);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(203, 108);
             // 
             // добавитьToolStripMenuItem
             // 
             this.добавитьToolStripMenuItem.Image = global::REGOVID.Properties.Resources.add;
             this.добавитьToolStripMenuItem.Name = "добавитьToolStripMenuItem";
             this.добавитьToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.добавитьToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+            this.добавитьToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
             this.добавитьToolStripMenuItem.Text = "Добавить";
             this.добавитьToolStripMenuItem.Click += new System.EventHandler(this.добавитьToolStripMenuItem_Click);
             // 
@@ -121,7 +121,7 @@ namespace REGOVID
             this.изменитьToolStripMenuItem1.Image = global::REGOVID.Properties.Resources.change;
             this.изменитьToolStripMenuItem1.Name = "изменитьToolStripMenuItem1";
             this.изменитьToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.изменитьToolStripMenuItem1.Size = new System.Drawing.Size(173, 26);
+            this.изменитьToolStripMenuItem1.Size = new System.Drawing.Size(202, 26);
             this.изменитьToolStripMenuItem1.Text = "Изменить";
             this.изменитьToolStripMenuItem1.Click += new System.EventHandler(this.изменитьToolStripMenuItem1_Click);
             // 
@@ -130,7 +130,7 @@ namespace REGOVID
             this.найтиToolStripMenuItem.Image = global::REGOVID.Properties.Resources.search;
             this.найтиToolStripMenuItem.Name = "найтиToolStripMenuItem";
             this.найтиToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.найтиToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+            this.найтиToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
             this.найтиToolStripMenuItem.Text = "Найти";
             this.найтиToolStripMenuItem.Click += new System.EventHandler(this.найтиToolStripMenuItem_Click);
             // 
@@ -139,18 +139,18 @@ namespace REGOVID
             this.удалитьToolStripMenuItem1.Image = global::REGOVID.Properties.Resources.remove;
             this.удалитьToolStripMenuItem1.Name = "удалитьToolStripMenuItem1";
             this.удалитьToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
-            this.удалитьToolStripMenuItem1.Size = new System.Drawing.Size(173, 26);
+            this.удалитьToolStripMenuItem1.Size = new System.Drawing.Size(202, 26);
             this.удалитьToolStripMenuItem1.Text = "Удалить";
             this.удалитьToolStripMenuItem1.Click += new System.EventHandler(this.удалитьToolStripMenuItem1_Click);
             // 
             // textBox1
             // 
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Location = new System.Drawing.Point(18, 28);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox1.Location = new System.Drawing.Point(24, 34);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox1.MaxLength = 99;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(164, 20);
+            this.textBox1.Size = new System.Drawing.Size(218, 22);
             this.textBox1.TabIndex = 1;
             this.textBox1.Enter += new System.EventHandler(this.textBox1_Enter);
             this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
@@ -160,11 +160,11 @@ namespace REGOVID
             // textBox2
             // 
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox2.Location = new System.Drawing.Point(18, 80);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox2.Location = new System.Drawing.Point(24, 98);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox2.MaxLength = 99;
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(164, 20);
+            this.textBox2.Size = new System.Drawing.Size(218, 22);
             this.textBox2.TabIndex = 3;
             this.textBox2.Enter += new System.EventHandler(this.textBox2_Enter);
             this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox2_KeyPress);
@@ -174,11 +174,11 @@ namespace REGOVID
             // textBox3
             // 
             this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox3.Location = new System.Drawing.Point(18, 106);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox3.Location = new System.Drawing.Point(24, 130);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox3.MaxLength = 99;
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(164, 20);
+            this.textBox3.Size = new System.Drawing.Size(218, 22);
             this.textBox3.TabIndex = 4;
             this.textBox3.Enter += new System.EventHandler(this.textBox3_Enter);
             this.textBox3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox3_KeyPress);
@@ -188,11 +188,11 @@ namespace REGOVID
             // textBox4
             // 
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox4.Location = new System.Drawing.Point(18, 133);
-            this.textBox4.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox4.Location = new System.Drawing.Point(24, 164);
+            this.textBox4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox4.MaxLength = 99;
             this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(164, 20);
+            this.textBox4.Size = new System.Drawing.Size(218, 22);
             this.textBox4.TabIndex = 5;
             this.textBox4.Enter += new System.EventHandler(this.textBox4_Enter);
             this.textBox4.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox4_KeyPress);
@@ -202,11 +202,11 @@ namespace REGOVID
             // textBox5
             // 
             this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox5.Location = new System.Drawing.Point(202, 28);
-            this.textBox5.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox5.Location = new System.Drawing.Point(269, 34);
+            this.textBox5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox5.MaxLength = 99;
             this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(164, 20);
+            this.textBox5.Size = new System.Drawing.Size(218, 22);
             this.textBox5.TabIndex = 6;
             this.textBox5.Enter += new System.EventHandler(this.textBox5_Enter);
             this.textBox5.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox5_KeyPress);
@@ -216,11 +216,11 @@ namespace REGOVID
             // textBox6
             // 
             this.textBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox6.Location = new System.Drawing.Point(202, 54);
-            this.textBox6.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox6.Location = new System.Drawing.Point(269, 66);
+            this.textBox6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox6.MaxLength = 99;
             this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(164, 20);
+            this.textBox6.Size = new System.Drawing.Size(218, 22);
             this.textBox6.TabIndex = 7;
             this.textBox6.Enter += new System.EventHandler(this.textBox6_Enter);
             this.textBox6.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox6_KeyPress);
@@ -232,13 +232,14 @@ namespace REGOVID
             this.dateTimePicker1.CustomFormat = "yyyy";
             this.dateTimePicker1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker1.Location = new System.Drawing.Point(19, 54);
-            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(2);
+            this.dateTimePicker1.Location = new System.Drawing.Point(25, 66);
+            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.ShowUpDown = true;
-            this.dateTimePicker1.Size = new System.Drawing.Size(163, 19);
+            this.dateTimePicker1.Size = new System.Drawing.Size(216, 22);
             this.dateTimePicker1.TabIndex = 2;
             this.dateTimePicker1.Enter += new System.EventHandler(this.dateTimePicker1_Enter);
+            this.dateTimePicker1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dateTimePicker1_KeyPress);
             this.dateTimePicker1.Leave += new System.EventHandler(this.dateTimePicker1_Leave);
             // 
             // comboBox1
@@ -253,11 +254,11 @@ namespace REGOVID
             "Один",
             "Первый",
             "Второй"});
-            this.comboBox1.Location = new System.Drawing.Point(202, 80);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBox1.Location = new System.Drawing.Point(269, 98);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.comboBox1.MaxDropDownItems = 3;
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(164, 21);
+            this.comboBox1.Size = new System.Drawing.Size(217, 24);
             this.comboBox1.TabIndex = 8;
             this.comboBox1.TextChanged += new System.EventHandler(this.comboBox1_TextChanged);
             this.comboBox1.Enter += new System.EventHandler(this.comboBox1_Enter);
@@ -268,22 +269,23 @@ namespace REGOVID
             this.dateTimePicker2.CustomFormat = "";
             this.dateTimePicker2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.dateTimePicker2.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker2.Location = new System.Drawing.Point(202, 108);
-            this.dateTimePicker2.Margin = new System.Windows.Forms.Padding(2);
+            this.dateTimePicker2.Location = new System.Drawing.Point(269, 133);
+            this.dateTimePicker2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dateTimePicker2.MinDate = new System.DateTime(2019, 1, 1, 0, 0, 0, 0);
             this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(163, 19);
+            this.dateTimePicker2.Size = new System.Drawing.Size(216, 22);
             this.dateTimePicker2.TabIndex = 9;
             this.dateTimePicker2.Enter += new System.EventHandler(this.dateTimePicker2_Enter);
+            this.dateTimePicker2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dateTimePicker2_KeyPress);
             this.dateTimePicker2.Leave += new System.EventHandler(this.dateTimePicker2_Leave);
             // 
             // button1
             // 
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.Location = new System.Drawing.Point(111, 167);
-            this.button1.Margin = new System.Windows.Forms.Padding(2);
+            this.button1.Location = new System.Drawing.Point(148, 206);
+            this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(164, 20);
+            this.button1.Size = new System.Drawing.Size(219, 25);
             this.button1.TabIndex = 11;
             this.button1.Text = "Обработка";
             this.button1.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -298,11 +300,11 @@ namespace REGOVID
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 466);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 579);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 13, 0);
             this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.statusStrip1.Size = new System.Drawing.Size(768, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1024, 22);
             this.statusStrip1.TabIndex = 97;
             // 
             // toolStripStatusLabel1
@@ -310,16 +312,15 @@ namespace REGOVID
             this.toolStripStatusLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripStatusLabel1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 16);
             // 
             // label1
             // 
             this.label1.BackColor = System.Drawing.SystemColors.Window;
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(19, 55);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(25, 68);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(144, 18);
+            this.label1.Size = new System.Drawing.Size(192, 22);
             this.label1.TabIndex = 96;
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label1.MouseEnter += new System.EventHandler(this.label1_MouseEnter);
@@ -328,10 +329,9 @@ namespace REGOVID
             // 
             this.label2.BackColor = System.Drawing.SystemColors.Window;
             this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label2.Location = new System.Drawing.Point(203, 81);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Location = new System.Drawing.Point(271, 100);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(144, 19);
+            this.label2.Size = new System.Drawing.Size(192, 23);
             this.label2.TabIndex = 95;
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label2.MouseEnter += new System.EventHandler(this.label2_MouseEnter);
@@ -340,10 +340,9 @@ namespace REGOVID
             // 
             this.label3.BackColor = System.Drawing.SystemColors.Window;
             this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label3.Location = new System.Drawing.Point(202, 109);
-            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label3.Location = new System.Drawing.Point(269, 134);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(129, 18);
+            this.label3.Size = new System.Drawing.Size(172, 22);
             this.label3.TabIndex = 94;
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label3.MouseEnter += new System.EventHandler(this.label3_MouseEnter);
@@ -353,33 +352,33 @@ namespace REGOVID
             this.dateTimePicker3.CustomFormat = "";
             this.dateTimePicker3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.dateTimePicker3.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker3.Location = new System.Drawing.Point(202, 134);
-            this.dateTimePicker3.Margin = new System.Windows.Forms.Padding(2);
+            this.dateTimePicker3.Location = new System.Drawing.Point(269, 165);
+            this.dateTimePicker3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dateTimePicker3.MinDate = new System.DateTime(2019, 1, 1, 0, 0, 0, 0);
             this.dateTimePicker3.Name = "dateTimePicker3";
-            this.dateTimePicker3.Size = new System.Drawing.Size(163, 19);
+            this.dateTimePicker3.Size = new System.Drawing.Size(216, 22);
             this.dateTimePicker3.TabIndex = 10;
             this.dateTimePicker3.Enter += new System.EventHandler(this.dateTimePicker3_Enter);
+            this.dateTimePicker3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dateTimePicker3_KeyPress);
             this.dateTimePicker3.Leave += new System.EventHandler(this.dateTimePicker3_Leave);
             // 
             // label4
             // 
             this.label4.BackColor = System.Drawing.SystemColors.Window;
             this.label4.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label4.Location = new System.Drawing.Point(203, 135);
-            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Location = new System.Drawing.Point(271, 166);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(128, 16);
+            this.label4.Size = new System.Drawing.Size(171, 20);
             this.label4.TabIndex = 93;
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label4.MouseEnter += new System.EventHandler(this.label4_MouseEnter);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SeaGreen;
-            this.ClientSize = new System.Drawing.Size(768, 488);
+            this.ClientSize = new System.Drawing.Size(1024, 601);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
@@ -399,7 +398,7 @@ namespace REGOVID
             this.Controls.Add(this.dataGridView1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.ShowIcon = false;
